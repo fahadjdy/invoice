@@ -4,9 +4,11 @@ $menuList = [
     ['name' => 'Dashboards', 'icon' => "<i class='bx bxs-dashboard'></i>", 'url' => base_url('dashboard')],
     ['name' => 'Party', 'icon' => "<i class='bx bxs-user'></i>", 'url' => base_url('party')],
     ['name' => 'Product', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('product')],
-    ['name' => 'Order', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('order')],
+    ['name' => 'Location', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('location')],
+    ['name' => 'Profile', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('profile')],
     ['name' => 'Invoice Formate', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('invoice')],
-    ['name' => 'Profile', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('Profile')],
+    ['name' => 'Price Config', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('price-config')],
+    ['name' => 'Order', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('order')],
 ];
 
 ?>
@@ -25,8 +27,7 @@ $menuList = [
                                 $menu .= '<li><a href="'.$menuItem['url'].'"';
                                 $menu .= 'class="waves-effect"' ;
                                 $menu .= '">' .$menuItem['icon']. $menuItem['name'].'</a>';
-                                $menu .= '</li>';
-                            
+                                $menu .= '</li>';                            
                         }
 
                         echo $menu

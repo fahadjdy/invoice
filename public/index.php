@@ -54,3 +54,10 @@ $paths = new Config\Paths();
 require $paths->systemDirectory . '/Boot.php';
 
 exit(CodeIgniter\Boot::bootWeb($paths));
+
+
+function p($data){
+    echo "<pre>";
+    print_r($data);
+    exit;
+}
