@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2024 at 07:57 PM
+-- Generation Time: Aug 13, 2024 at 07:46 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -24,17 +24,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `invoice_format`
+-- Table structure for table `invoice`
 --
 
-CREATE TABLE `invoice_format` (
-  `invoice_format_id` int(11) NOT NULL,
+CREATE TABLE `invoice` (
+  `invoice_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `header` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `invoice`
+--
+
+INSERT INTO `invoice` (`invoice_id`, `name`, `header`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'With Image', 'images', 1, '2024-08-13 17:36:57', '2024-08-13 17:36:57'),
+(2, 'with location', 'location', 1, '2024-08-13 17:40:24', '2024-08-13 17:40:24'),
+(3, 'with image + location', 'image,location', 1, '2024-08-13 17:40:43', '2024-08-13 17:40:43');
 
 -- --------------------------------------------------------
 
@@ -84,6 +93,32 @@ INSERT INTO `party` (`party_id`, `name`, `address`, `contact`, `email`, `status`
 (1, 'Fahad Jadiya', 'Basu , kaloni vas , vadgam', 7203070468, '', 1, '2024-08-06 16:06:42', '2024-08-06 16:06:42'),
 (24, 'Iliyas Jadiya', 'Basu , kaloni vas , vadgam', 9820185566, 'iliyasjdy12@gmail.com', 1, '2024-08-07 15:38:14', '2024-08-07 15:38:14'),
 (26, 'Mustak', 'Basu', 7894561237, 'mustak@gmail.com', 0, '2024-08-07 15:55:43', '2024-08-07 15:55:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `price`
+--
+
+CREATE TABLE `price` (
+  `price_id` int(11) NOT NULL,
+  `from_sqft` int(4) NOT NULL,
+  `to_sqft` int(4) NOT NULL,
+  `price` float(15,2) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `price`
+--
+
+INSERT INTO `price` (`price_id`, `from_sqft`, `to_sqft`, `price`, `created_at`, `updated_at`, `status`) VALUES
+(1, 1, 9, 450.00, '2024-08-13 16:56:32', '2024-08-13 16:56:32', 1),
+(2, 10, 12, 500.00, '2024-08-13 17:08:02', '2024-08-13 17:08:02', 1),
+(3, 13, 16, 650.00, '2024-08-13 17:08:44', '2024-08-13 17:08:44', 1),
+(4, 17, 20, 700.00, '2024-08-13 17:08:57', '2024-08-13 17:08:57', 0);
 
 -- --------------------------------------------------------
 
@@ -158,10 +193,10 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `status`, `creat
 --
 
 --
--- Indexes for table `invoice_format`
+-- Indexes for table `invoice`
 --
-ALTER TABLE `invoice_format`
-  ADD PRIMARY KEY (`invoice_format_id`);
+ALTER TABLE `invoice`
+  ADD PRIMARY KEY (`invoice_id`);
 
 --
 -- Indexes for table `location`
@@ -177,6 +212,12 @@ ALTER TABLE `location`
 ALTER TABLE `party`
   ADD PRIMARY KEY (`party_id`),
   ADD UNIQUE KEY `contact` (`contact`);
+
+--
+-- Indexes for table `price`
+--
+ALTER TABLE `price`
+  ADD PRIMARY KEY (`price_id`);
 
 --
 -- Indexes for table `product`
@@ -203,10 +244,10 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `invoice_format`
+-- AUTO_INCREMENT for table `invoice`
 --
-ALTER TABLE `invoice_format`
-  MODIFY `invoice_format_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `invoice`
+  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `location`
@@ -219,6 +260,12 @@ ALTER TABLE `location`
 --
 ALTER TABLE `party`
   MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `price`
+--
+ALTER TABLE `price`
+  MODIFY `price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `product`

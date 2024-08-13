@@ -96,15 +96,15 @@
 
 
     <!-- Sweet Alerts css/js -->
-    <link href="assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-    <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
-    <script src="assets/js/pages/sweet-alerts.init.js"></script>
+    <link href="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.css')?>" rel="stylesheet" type="text/css" />
+    <script src="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/pages/sweet-alerts.init.js') ?>"></script>
 
     <!-- Datable  -->
-    <link rel="stylesheet" href="assets/libs/datatable/jquery.dataTables.min.css">
-    <script src="assets/libs/datatable/jquery.dataTables.min.js"></script>
-    <script src="assets/libs/datatable/dataTables.responsive.min.js"></script>
-    <link rel="stylesheet" href="assets/libs/datatable/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/libs/datatable/jquery.dataTables.min.css') ?>">
+    <script src="<?= base_url('assets/libs/datatable/jquery.dataTables.min.js')?>"></script>
+    <script src="<?= base_url('assets/libs/datatable/dataTables.responsive.min.js')?>"></script>
+    <link rel="stylesheet" href="<?= base_url('assets/libs/datatable/responsive.dataTables.min.css') ?>">
     
     <?= $this->renderSection('js') ?>
     <script src="<?= base_url('assets/js/app.js') ?>"></script>

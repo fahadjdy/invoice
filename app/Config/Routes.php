@@ -43,12 +43,20 @@ $routes->post('/saveLocation','Location::saveLocation',['filter' => 'authFilter'
 
 
 // Invoice routes
-$routes->get('/invoice', 'Invoice::index',['filter' => 'authFilter']);
-$routes->post('/getInvoiceListAjax','Invoice::getInvoiceListAjax');
-$routes->post('/deleteInvoice', 'Invoice::deleteInvoice',['filter' => 'authFilter']);
-$routes->get('/addOrUpdateInvoice','Invoice::addOrUpdateInvoice',['filter' => 'authFilter']);
-$routes->get('/addOrUpdateInvoice/(:num)','Invoice::addOrUpdateInvoice/$1',['filter' => 'authFilter']);
-$routes->post('/saveInvoice','Invoice::saveInvoice',['filter' => 'authFilter']);
+$routes->get('/config/invoice', 'Invoice::index',['filter' => 'authFilter']);
+$routes->post('/config/invoice/getInvoiceListAjax','Invoice::getInvoiceListAjax');
+$routes->post('/config/invoice/deleteInvoice', 'Invoice::deleteInvoice',['filter' => 'authFilter']);
+$routes->get('/config/invoice/addOrUpdateInvoice','Invoice::addOrUpdateInvoice',['filter' => 'authFilter']);
+$routes->get('/config/invoice/addOrUpdateInvoice/(:num)','Invoice::addOrUpdateInvoice/$1',['filter' => 'authFilter']);
+$routes->post('/config/invoice/saveInvoice','Invoice::saveInvoice',['filter' => 'authFilter']);
+
+
+$routes->get('/config/price', 'Config::price',['filter' => 'authFilter']);
+$routes->post('/config/price/getPriceListAjax', 'Config::getPriceListAjax',['filter' => 'authFilter']);
+$routes->get('/config/price/addOrUpdatePrice', 'Config::addOrUpdatePrice',['filter' => 'authFilter']);
+$routes->get('/config/price/addOrUpdatePrice/(:num)','Config::addOrUpdatePrice/$1',['filter' => 'authFilter']);
+$routes->post('/config/price/savePrice','Config::savePrice',['filter' => 'authFilter']);
+$routes->post('/config/price/deletePrice', 'Config::deletePrice',['filter' => 'authFilter']);
 
 
 $routes->get('/profile', 'Home::profile',['filter' => 'authFilter']);

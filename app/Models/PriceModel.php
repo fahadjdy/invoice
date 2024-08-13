@@ -4,16 +4,16 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class InvoiceModel extends Model
+class PriceModel extends Model
 {
-    protected $table            = 'invoice';
-    protected $primaryKey       = 'invoice_id';
+    protected $table            = 'price';
+    protected $primaryKey       = 'price_id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'invoice_id', 'name', 'header', 'status', 'created_at', 'updated_at'
+        'price_id','from_sqft','to_sqft','price','created_at','update_at','status'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -45,4 +45,13 @@ class InvoiceModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+
+    public function getAllPrice(){
+        $data = $this->findAll();
+        foreach($data as $key => $val){
+            $data[$key]['sqft'] = $val['from_sqft'].' - '.$val['to_sqft'];
+        }
+        return $data;
+    }
 }

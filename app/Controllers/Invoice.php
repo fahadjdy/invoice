@@ -10,8 +10,10 @@ class Invoice extends BaseController
 {
     public function index()
     {
-        $data['pageTitle'] = 'invoice';
-        return view('invoice', $data);
+        $data['pageTitle'] = 'Invoice Setting';
+        $hassAccessInvoiceAdd = true;
+        $data['add'] = ($hassAccessInvoiceAdd) ? '<div class="d-flex justify-content-end "><a href="' . base_url('/config/invoice/addOrUpdateInvoice') . '"><button class="btn btn-primary waves-effect waves-light mb-3 " > <i class="fa fa-plus"></i> Add ' . $data['pageTitle'] . '</button></a></div>' : '';
+        return view('config/invoice', $data);
     }
 
     
@@ -61,23 +63,20 @@ class Invoice extends BaseController
     public function getInvoiceListAjax()
     {
         $InvoiceModel = new InvoiceModel();
-        $result = $InvoiceModel->where('status',1)->findAll();
+        $result = $InvoiceModel->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 
             foreach ($result as $value) {
 
-                // role edit access
                 $hassAccessInvoiceEdit = true;
-                // $action = ($hassAccessInvoiceEdit) ? '<button type="button"  class="btn btn-light btn-sm waves-effect edit-role" id="' . $value['Invoice_id'] . '" data-bs-toggle="modal" data-bs-target="#RoleManagementFormModal"><i
-                // class="mdi mdi-square-edit-outline me-1"></i> Edit</button>' : '';
 
-                $action = ($hassAccessInvoiceEdit) ? '<a href="' . base_url('addOrUpdateInvoice/' . $value['Invoice_id']) . '"><button   class="btn btn-light btn-sm waves-effect " ><i
+                $action = ($hassAccessInvoiceEdit) ? '<a href="' . base_url('/config/invoice/addOrUpdateInvoice/' . $value['invoice_id']) . '"><button   class="btn btn-light btn-sm waves-effect " ><i
             class="mdi mdi-square-edit-outline me-1"></i> Edit</button></a>' : '';
 
                 // role delete access
                 $hassAccessInvoiceDelete = true;
-                $action .= ($hassAccessInvoiceDelete) ? '<button type="button" id="' . $value['Invoice_id'] . '" class="btn btn-light btn-sm waves-effect delete mx-2"> <i
+                $action .= ($hassAccessInvoiceDelete) ? '<button type="button" id="' . $value['invoice_id'] . '" class="btn btn-light btn-sm waves-effect delete mx-2"> <i
                 class="mdi mdi-trash-can me-1"></i> Delete</button>' : '';
 
                 if (empty($action)) {
@@ -109,10 +108,10 @@ class Invoice extends BaseController
     public function deleteInvoice()
     {
 
-        $Invoice_id = $this->request->getPost('Invoice_id');
+        $invoice_id = $this->request->getPost('invoice_id');
         $InvoiceModel = new InvoiceModel();
 
-        $status = $InvoiceModel->set('status',0)->where('Invoice_id',$Invoice_id)->update();
+        $status = $InvoiceModel->set('status',0)->where('invoice_id',$invoice_id)->update();
         
         if ($status)
             echo json_encode(['msg' => 'Invoice Deleted Successfully..!', 'status' => true]);
@@ -121,18 +120,18 @@ class Invoice extends BaseController
     }
 
 
-    public function addOrUpdateInvoice($Invoice_id = 0)
+    public function addOrUpdateInvoice($invoice_id = 0)
     {
 
-        if ($Invoice_id != 0) {
+        if ($invoice_id != 0) {
             $InvoiceModel = new InvoiceModel();
-            $data['data'] = $InvoiceModel->where(['Invoice_id' => $Invoice_id])->first();
-            $data['edit'] = $Invoice_id;
+            $data['data'] = $InvoiceModel->where(['invoice_id' => $invoice_id])->first();
+            $data['edit'] = $invoice_id;
             $data['pageTitle'] = 'Edit Invoice Management';
         } else {
             $data['pageTitle'] = 'Add Invoice Management';
         }
 
-        return view('addOrUpdateInvoice', $data);
+        return view('config/addOrUpdateInvoice', $data);
     }
 }
