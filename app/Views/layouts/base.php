@@ -94,7 +94,6 @@
     <script src="<?= base_url('assets/js/common.js') ?>"></script>
     <script src="<?= base_url('assets/js/jquery.validate.js') ?>"></script>
 
-
     <!-- Sweet Alerts css/js -->
     <link href="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.css')?>" rel="stylesheet" type="text/css" />
     <script src="<?= base_url('assets/libs/sweetalert2/sweetalert2.min.js') ?>"></script>
@@ -105,7 +104,16 @@
     <script src="<?= base_url('assets/libs/datatable/jquery.dataTables.min.js')?>"></script>
     <script src="<?= base_url('assets/libs/datatable/dataTables.responsive.min.js')?>"></script>
     <link rel="stylesheet" href="<?= base_url('assets/libs/datatable/responsive.dataTables.min.css') ?>">
-    
+
+    <!-- Slect 2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('select').select2();
+        });
+    </script>
     <?= $this->renderSection('js') ?>
     <script src="<?= base_url('assets/js/app.js') ?>"></script>
    

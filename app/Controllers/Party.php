@@ -56,6 +56,7 @@ class Party extends BaseController
         }
     }
 
+
     public function getPartyListAjax()
     {
         $PartyModel = new PartyModel();

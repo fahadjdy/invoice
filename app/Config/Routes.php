@@ -65,4 +65,14 @@ $routes->post('/updateProfile', 'Home::updateProfile',['filter' => 'authFilter']
 
 // Order routes 
 $routes->get('/order', 'Order::index',['filter' => 'authFilter']);
+$routes->post('/orders/getOrdersListAjax','Order::getOrdersListAjax',['filter' => 'authFilter']);
+$routes->post('/orders/deleteOrders', 'Order::deleteOrders',['filter' => 'authFilter']);
+$routes->get('/orders/addOrUpdateOrders','Order::addOrUpdateOrders',['filter' => 'authFilter']);
+$routes->get('/orders/addOrUpdateOrders/(:num)','Order::addOrUpdateOrders/$1',['filter' => 'authFilter']);
+// $routes->post('/orders/saveOrders','Order::saveOrders',['filter' => 'authFilter']);
 
+$routes->get('/orders/getPartyNameList','Order::getPartyNameList',['filter' => 'authFilter']);
+$routes->get('/orders/getInvoiceFormateList','Order::getInvoiceFormateList',['filter' => 'authFilter']);
+$routes->get('/orders/getLocationList','Order::getLocationList',['filter' => 'authFilter']);
+$routes->get('/orders/getProductList','Order::getProductList',['filter' => 'authFilter']);
+$routes->get('/orders/getOrderDetails/(:num)', 'Order::getOrderDetails/$1');
