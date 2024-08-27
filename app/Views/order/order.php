@@ -45,7 +45,7 @@ $(document).ready(function () {
         scrollY: false,
         scrollX: false,
         serverSide: false,
-        processing: false,
+        processing: true,
         ajax: {
             url: location.origin + '/orders/getOrdersListAjax', // json datasource
             type: "post"

@@ -113,19 +113,18 @@
         if ('<?= isset($transactions) ?>') {
             populateOrderDetails();
         }
+
     }
+
+    $(document).on('setSelectedOption', function() {
+        var invoiceId = <?= json_encode($data['invoice_id'] ?? null) ?>;
+        $(`#invoiceList option[value="${invoiceId}"]`).prop('selected', true);
+    });
 
     function populateOrderDetails() {
         // Populate party list')
         $.each($('#partyList option'), function(index, option) {
             if (option.value == '<?= $data['party_id'] ?? null ?>') {
-                $(option).prop('selected', true);
-            }
-        });
-
-        // Populate invoice list
-        $.each($('#invoiceList option'), function(index, option) {
-            if (option.value == '<?= $data['invoice_id'] ?? null ?>') {
                 $(option).prop('selected', true);
             }
         });
@@ -138,11 +137,7 @@
 
 
     }
-
-  
-
-
-
+    
 
 async function addRow() {
     try {
@@ -177,11 +172,27 @@ async function addRow() {
         
     function removeRow(button) {
         $(button).closest('tr').remove();
+        var transaction_id = $(button).closest('tr').attr('data-transaction-id');
+        if(transaction_id !== null){
+            $.ajax({
+                type: "POST",
+                url: location.origin + "/orders/transaction/delete",
+                data: {transaction_id : transaction_id},
+                dataType: "json",
+                success: function (response) {
+                    if(response.status){
+                        successToast(response.message);
+                    }else{
+                        failToast(response.message);                        
+                    }
+                }
+            });
+        }
     }
 
     $(document).ready(function() {
         init();
-
+        
         const orderId = <?= (isset($data)) ? $data['orders_id'] : '' ?>; // Replace with actual order ID
         populateRows(orderId);
 
@@ -205,20 +216,15 @@ async function addRow() {
     function submitForm() {
         var form = $('#OrdersForm')[0];
         var fd = new FormData(form);
-        var url = '<?= base_url('saveOrders') ?>';
         $.ajax({
             type: "POST",
-            url: url,
+            url: location.origin + "/orders/saveOrders",
             data: fd,
             dataType: "JSON",
             contentType: false,
             processData: false,
             success: function(response) {
-                if (response.status) {
-                    successToast(response.message);
-                } else {
-                    errorToast(response.message);
-                }
+                location.href = location.origin + "/order";
             }
         });
     }

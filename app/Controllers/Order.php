@@ -16,8 +16,7 @@ class Order extends BaseController
     public function index()
     {
         $data['pageTitle'] = 'Order Listing';
-        $hassAccessOrderAdd = true;
-        $data['add'] = ($hassAccessOrderAdd) ? '<div class="d-flex justify-content-end "><a href="' . base_url('orders/addOrUpdateOrders') . '"><button class="btn btn-primary waves-effect waves-light mb-3 " > <i class="fa fa-plus"></i> Add ' . $data['pageTitle'] . '</button></a></div>' : '';
+        $data['add'] = '<div class="d-flex justify-content-end "><a href="' . base_url('orders/addOrUpdateOrders') . '"><button class="btn btn-primary waves-effect waves-light mb-3 " > <i class="fa fa-plus"></i> Add ' . $data['pageTitle'] . '</button></a></div>' ;
 
         return view('order/order', $data);
     }
@@ -26,7 +25,7 @@ class Order extends BaseController
     public function getOrdersListAjax()
     {
         $OrdersModel = new OrdersModel();
-        $result = $OrdersModel->select('orders.*,party.name as party_name')->join('party','party.party_id = orders.party_id','left')->findAll();
+        $result = $OrdersModel->select('orders.*,party.name as party_name')->join('party','party.party_id = orders.party_id','left')->orderBy('orders_id','DESC')->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 
@@ -35,6 +34,10 @@ class Order extends BaseController
 
                 $action =  '<a href="' . base_url('orders/addOrUpdateOrders/' . $value['orders_id']) . '"><button   class="btn btn-light btn-sm waves-effect " ><i
             class="mdi mdi-square-edit-outline me-1"></i> Edit</button></a>';
+
+
+                $action .= '<a href="' . base_url('orders/print/' . $value['orders_id']) . '"><button type="button"  class="btn btn-light btn-sm waves-effect mx-2"> <i
+                class="mdi mdi-printer me-1"></i> Print</button></a>';
 
                 $action .= '<button type="button" id="' . $value['orders_id'] . '" class="btn btn-light btn-sm waves-effect delete mx-2"> <i
                 class="mdi mdi-trash-can me-1"></i> Delete</button>';
@@ -221,7 +224,7 @@ class Order extends BaseController
         $sizes2 = $this->request->getPost('size2');
         $prices = $this->request->getPost('price');
         $qtys = $this->request->getPost('qty');
-    
+   
         foreach ($locations as $index => $locationId) {
             $transactionData = [
                 'orders_id' => $ordersId,
@@ -244,4 +247,93 @@ class Order extends BaseController
         return $this->response->setJSON(['status' => true, 'message' => 'Order saved successfully']);
     }
     
+
+    public function deleteTransaction(){
+        try{
+
+            $transaction_id = $this->request->getPost('transaction_id');
+            if(!empty($transaction_id)){
+                $transactionModel = new TransactionModel();
+                $transactionModel->where('transaction_id',$transaction_id)->delete();
+                return $this->response->setJSON(['status'=> true,'message'=> 'Trasanction deleted']);
+            }else{
+                return $this->response->setJSON(['status'=> false,'message'=> 'Something went wrong!']);
+            }
+        }catch(\Exception $e){
+            return $this->response->setJSON(['status'=> false,'message'=> $e->getMessage()]);
+        }
+    }
+
+    public function getHeaders($invoice_id){
+        $invoiceModel = new InvoiceModel();
+        $invoiceHeader = $invoiceModel->select('LOWER(header) as header')->where('invoice_id',$invoice_id)->first();
+        
+        $header = [
+            'SrNo.' , 'Product Description' , 'Size','Qty','Price','Amount'
+        ];
+        if(!empty($invoiceHeader) && !empty($invoiceHeader['header'])){
+            switch ($invoiceHeader['header']){
+                case 'images': {
+                    $header = [
+                        'SrNo.' , 'Image', 'Product Description' , 'Size','Qty','Price','Amount'
+                    ];
+                    break;
+                }
+                case 'location': {
+                    $header = [
+                        'SrNo.' , 'Location', 'Product Description' , 'Size','Qty','Price','Amount'
+                    ];
+                    break;
+                }
+                case 'image,location': {
+                    $header = [
+                        'SrNo.' ,'Image', 'Location', 'Product Description' , 'Size','Qty','Price','Amount'
+                    ];
+                    break;
+                }
+                case '-': {
+                    $header = [
+                        'SrNo.' ,  'Product Description' , 'Size','Qty','Price','Amount'
+                    ];
+                    break;
+                }
+                default: {  
+                    $header = [
+                        'SrNo.' ,  'Product Description' , 'Size','Qty','Price','Amount'
+                    ];
+                }
+            }
+        }
+        return $header;
+    }
+
+    public function printOrders($orders_id){
+        try{
+            if(is_numeric($orders_id)){
+
+                $ordersModel = new OrdersModel();
+                $orders = $ordersModel->select('p.name as paty_name, p.address as paty_address , p.contact as party_contact , p.email as party_email , orders.*')->join('party p','p.party_id = orders.party_id','left')->where('orders_id',$orders_id)->first();
+                
+                $data = [];
+                if(!empty($orders)){
+                    $data['orders'] = $orders;   
+                    $transactionModel = new TransactionModel();
+                    $transactions = $transactionModel->select('transaction.extra_product,transaction.size1 , transaction.size2, transaction.price ,transaction.qty , transaction.total_price, transaction.created_at , l.name as location_name,p.name as product_name')->join('location l','transaction.location_id  =  l.location_id','left')->join('product p','transaction.product_id  =  p.product_id','left')->where('orders_id',$orders['orders_id'])->findAll();
+                    if(!empty($transactions)){
+                        $data['transactions'] = $transactions;
+                    }
+                    $data['headers'] = $this->getHeaders($orders['invoice_id']);
+                    p($data);
+                }else{
+                    return $this->response->setJSON(['status'=> false,'message'=> 'No Orders found']);
+                }
+            }else{
+                return $this->response->setJSON(['status'=> false,'message'=> 'No Orders found']);
+            }
+        }catch(\Exception $e){
+            return $this->response->setJSON(['status'=> false,'message'=> $e->getMessage()]);
+        }
+                
+    }
 }
+
