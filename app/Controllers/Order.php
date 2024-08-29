@@ -10,9 +10,11 @@ use App\Models\InvoiceModel;
 use App\Models\TransactionModel;
 use App\Models\LocationModel;
 use App\Models\ProductModel;
+use TCPDF;
 
 class Order extends BaseController
 {
+
     public function index()
     {
         $data['pageTitle'] = 'Order Listing';
@@ -323,7 +325,7 @@ class Order extends BaseController
                         $data['transactions'] = $transactions;
                     }
                     $data['headers'] = $this->getHeaders($orders['invoice_id']);
-                    p($data);
+                   $this->generatePdf($data);
                 }else{
                     return $this->response->setJSON(['status'=> false,'message'=> 'No Orders found']);
                 }
@@ -334,6 +336,130 @@ class Order extends BaseController
             return $this->response->setJSON(['status'=> false,'message'=> $e->getMessage()]);
         }
                 
+    }
+    public function generatePdf($data) {
+        try {
+            // Create new PDF document
+            $pdf = new \TCPDF();
+            
+            // Set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Your Name');
+            $pdf->SetTitle('Invoice #' . $data['orders']['orders_id']);
+            $pdf->SetSubject('PDF Generation');
+            $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+            
+            // Add a page
+            $pdf->AddPage();
+            
+            // Set font
+            $pdf->SetFont('helvetica', '', 12);
+            
+            // Build HTML content
+            $html = $this->buildHtml($data);
+            
+            // Write HTML content
+            $pdf->writeHTML($html, true, false, true, 'L', true);
+            
+            // Output PDF (I: inline display in browser, D: force download, F: save to file, S: return as string)
+            $filename = 'Invoice_' . $data['orders']['orders_id'] . '.pdf';
+            $pdf->Output($filename, 'I'); // 'I' for inline display in browser
+            
+            exit; // Ensure no additional output after PDF
+        } catch (\Exception $e) {
+            // Handle exception
+            return $this->response->setJSON(['status' => false, 'message' => 'Failed to generate PDF: ' . $e->getMessage()]);
+        }
+    }
+    
+    
+
+    private function buildHtml($data)
+    {
+        // Build HTML content for the PDF
+            // This is a simplified example; adjust it according to your $data structure
+            $html = '
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    .header { text-align: center; margin-bottom: 20px; }
+                    .header h1 { margin: 0; }
+                    .info { margin-bottom: 20px; }
+                    .info p { margin: 5px 0; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    table, th, td { border: 1px solid black; }
+                    th, td { padding: 8px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Invoice #' . $data['orders']['invoice_id'] . '</h1>
+                    <p>Date: ' . $data['orders']['created_at'] . '</p>
+                </div>
+                
+              <div class="info">
+                    <h2>Customer Information</h2>
+                    <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                        <tr>
+                            <th style="text-align: left; width: 30%;">Name:</th>
+                            <td>' . $data['orders']['paty_name'] . '</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align: left;">Address:</th>
+                            <td>' . $data['orders']['paty_address'] . '</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align: left;">Contact:</th>
+                            <td>' . $data['orders']['party_contact'] . '</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align: left;">Email:</th>
+                            <td>' . $data['orders']['party_email'] . '</td>
+                        </tr>
+                    </table>
+                </div>
+
+                
+                <div class="info">
+                    <h2>Order Details</h2>
+                    <p>Order ID: ' . $data['orders']['orders_id'] . '</p>
+                    <p>Showroom: ' . $data['orders']['name'] . '</p>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>';
+                        
+            foreach ($data['headers'] as $header) {
+                $html .= '<th>' . $header . '</th>';
+            }
+
+            $html .= '</tr>
+                    </thead>
+                    <tbody>';
+
+            $srno = 1;
+            foreach ($data['transactions'] as $transaction) {
+                $html .= '<tr>
+                    <td>' . $srno++ . '</td>
+                    <td>' . $transaction['product_name'] . ' (' . $transaction['extra_product'] . ')</td>
+                    <td>' . $transaction['size1'] . ', ' . $transaction['size2'] . '</td>
+                    <td>' . $transaction['qty'] . '</td>
+                    <td>' . $transaction['price'] . '</td>
+                    <td>' . $transaction['total_price'] . '</td>
+                </tr>';
+            }
+
+            $html .= '</tbody>
+                </table>
+                
+            </body>
+            </html>';
+
+            return $html;
     }
 }
 
