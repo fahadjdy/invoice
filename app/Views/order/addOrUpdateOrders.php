@@ -138,12 +138,12 @@
 
     }
     
-
+   
 async function addRow() {
     try {
         // Get the next row index and transaction ID
        
-        let rowIndex = $('tbody tr').length + 1;
+        // let rowIndex = $('tbody tr').length + 1;
 
         // Fetch options for location and product dropdowns
         const [locationOptions, productOptions] = await Promise.all([
@@ -155,7 +155,7 @@ async function addRow() {
         const row = `<tr>
                         <td>${rowIndex}</td>
                         <td><select name="location_id[]" class="form-control" id="locationList">${locationOptions}</select></td>
-                        <td><select name="product_id[]" class="form-control">${productOptions}</select></td>
+                        <td><select multiple name="product_id[${rowIndex}][]" class="form-control">${productOptions}</select></td>
                         <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control"></textarea></td>
                         <td width="15%"><span class="d-flex"><input type="number" name="size1[]" class="form-control">*<input type="number" name="size2[]" class="form-control"></span></td>
                         <td width="10%"><input type="number" name="price[]" class="form-control"></td>

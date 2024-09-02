@@ -194,8 +194,7 @@ class Order extends BaseController
     }
 
     public function saveOrders() {
-        // $this->request->setMethod('post');
-    
+        // Get the posted data
         $ordersId = $this->request->getPost('orders_id');
         $name = $this->request->getPost('name');
         $partyId = $this->request->getPost('party_id');
@@ -217,21 +216,26 @@ class Order extends BaseController
             $ordersId = $ordersModel->insert($ordersData);
         }
     
-        // Save transaction data
+        // Prepare to save transaction data
         $transactionModel = new TransactionModel();
         $locations = $this->request->getPost('location_id');
-        $products = $this->request->getPost('product_id');
+        $productsArray = $this->request->getPost('product_id'); // Array of arrays
         $extraProducts = $this->request->getPost('extra_product');
         $sizes1 = $this->request->getPost('size1');
         $sizes2 = $this->request->getPost('size2');
         $prices = $this->request->getPost('price');
         $qtys = $this->request->getPost('qty');
-   
+        $transactionIds = $this->request->getPost('transaction_id');
+        // p($transactionIds);
+        
         foreach ($locations as $index => $locationId) {
+            // Convert the inner array of product IDs to a comma-separated string
+            $productIds = isset($productsArray[$transactionIds[$index]]) ? implode(",", $productsArray[$transactionIds[$index]]) : '';
+          
             $transactionData = [
                 'orders_id' => $ordersId,
                 'location_id' => $locationId,
-                'product_id' => $products[$index],
+                'product_id' => $productIds,
                 'extra_product' => $extraProducts[$index],
                 'size1' => $sizes1[$index],
                 'size2' => $sizes2[$index],
@@ -239,8 +243,9 @@ class Order extends BaseController
                 'qty' => $qtys[$index],
                 'total_price' => $prices[$index] * $qtys[$index]
             ];
-            if (isset($this->request->getPost('transaction_id')[$index])) {
-                $transactionModel->update($this->request->getPost('transaction_id')[$index], $transactionData);
+            // Check if we need to update or insert
+            if (isset($transactionIds[$index])) {
+                $transactionModel->update($transactionIds[$index], $transactionData);
             } else {
                 $transactionModel->insert($transactionData);
             }

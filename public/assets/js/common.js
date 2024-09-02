@@ -97,29 +97,30 @@ function getInvoiceFormateList(){
 }
 
 function fetchProductOptions() {
-    // This example assumes you have a method to fetch product options
     return new Promise((resolve, reject) => {
         $.ajax({
             type: "GET",
-            url: location.origin + "/orders/getProductList",
+            url: `${location.origin}/orders/getProductList`,
             dataType: "json",
             success: function (response) {
-                if (response.status) {
-                    let options = '';
-                    $.each(response.data, function (index, value) {
-                        options += `<option value="${value.product_id}">${value.product_name}</option>`;
-                    });
+                if (response && response.status && Array.isArray(response.data)) {
+                    let options = response.data.map(product => 
+                        `<option value="${product.product_id}">${product.product_name}</option>`
+                    ).join('');
                     resolve(options);
                 } else {
-                    reject("Failed to fetch product data.");
+                    reject("Failed to fetch product data: Invalid response format.");
                 }
             },
-            error: function () {
-                reject("Error fetching product data.");
+            error: function (xhr, status, error) {
+                // Optional: log details of the error
+                console.error("AJAX error:", status, error);
+                reject("Error fetching product data: " + error);
             }
         });
     });
 }
+
 
 
 function fetchLocationOptions() {
@@ -168,6 +169,7 @@ function fetchOrderDetails(orderId) {
     });
 }
 
+
 // Fetch and populate existing rows
 async function populateRows(orderId) {
     try {
@@ -179,16 +181,17 @@ async function populateRows(orderId) {
             fetchLocationOptions(),
             fetchProductOptions()
         ]);
-
+        
         // Clear existing rows
         $('tbody').empty();
-
+        
+        
         // Populate rows
         orderDetails.transactions.forEach(transaction => {
             const row = `<tr data-transaction-id="${transaction.transaction_id}">
-                            <td>${rowIndex}</td>
+                            <td>${rowIndex++}</td>
                             <td><input type="hidden" name="transaction_id[]" value="${transaction.transaction_id}"><select name="location_id[]" class="form-control" id="locationList-${transaction.transaction_id}">${populateOptions(locationOptions, transaction.location_id)}</select></td>
-                            <td><select name="product_id[]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>
+                            <td><select multiple name="product_id[${transaction.transaction_id}][]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>
                             <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control">${transaction.extra_product}</textarea></td>
                             <td width="15%"><span class="d-flex"><input type="number" name="size1[]" class="form-control" value="${transaction.size1}">*<input type="number" name="size2[]" class="form-control" value="${transaction.size2}"></span></td>
                             <td width="10%"><input type="number" name="price[]" class="form-control" value="${transaction.price}"></td>
@@ -205,9 +208,23 @@ async function populateRows(orderId) {
 }
 
 // Populate options and set selected value
-function populateOptions(options, selectedValue) {
+function populateOptions(options, selectedValues) {
+    // Convert selectedValues to an array if it's a comma-separated string
+    const selectedValuesArray = Array.isArray(selectedValues) ? selectedValues : selectedValues.split(',').map(value => value.trim());
+
+    // Escape HTML function to prevent injection attacks
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Update options with selected attributes
     return options.replace(/<option value="([^"]*)">([^<]*)<\/option>/g, (match, value, text) => {
-        const isSelected = value == selectedValue ? ' selected' : '';
-        return `<option value="${value}"${isSelected}>${text}</option>`;
+        const isSelected = selectedValuesArray.includes(value) ? ' selected' : '';
+        return `<option value="${value}"${isSelected}>${escapeHtml(text)}</option>`;
     });
 }
