@@ -154,8 +154,8 @@ async function addRow() {
         // Construct the new row
         const row = `<tr>
                         <td>${rowIndex}</td>
-                        <td><select name="location_id[]" class="form-control" id="locationList">${locationOptions}</select></td>
-                        <td><select multiple name="product_id[${rowIndex}][]" class="form-control">${productOptions}</select></td>
+                        <td width="10%"><select name="location_id[]" class="form-control" id="locationList">${locationOptions}</select></td>
+                        <td width="20%"><select multiple="multiple"  name="product_id[${rowIndex}][]" class="form-control">${productOptions}</select></td>
                         <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control"></textarea></td>
                         <td width="15%"><span class="d-flex"><input type="number" name="size1[]" class="form-control">*<input type="number" name="size2[]" class="form-control"></span></td>
                         <td width="10%"><input type="number" name="price[]" class="form-control"></td>
@@ -165,6 +165,7 @@ async function addRow() {
 
         // Append the new row to the table body
         $('tbody').append(row);
+        $('select').select2();
     } catch (error) {
         console.error(error);
     }

@@ -6,6 +6,7 @@ $menuList = [
     ['name' => 'Product', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('product')],
     ['name' => 'Location', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('location')],
     ['name' => 'Profile', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('profile')],
+    ['name' => 'Frame Image', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('frame-image')],
     ['name' => 'Invoice Setting', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('config/invoice')],
     ['name' => 'Price Setting', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('config/price')],
     ['name' => 'Order', 'icon' => "<i class='bx bx-images'></i>", 'url' => base_url('order')],

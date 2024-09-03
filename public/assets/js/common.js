@@ -190,8 +190,8 @@ async function populateRows(orderId) {
         orderDetails.transactions.forEach(transaction => {
             const row = `<tr data-transaction-id="${transaction.transaction_id}">
                             <td>${rowIndex++}</td>
-                            <td><input type="hidden" name="transaction_id[]" value="${transaction.transaction_id}"><select name="location_id[]" class="form-control" id="locationList-${transaction.transaction_id}">${populateOptions(locationOptions, transaction.location_id)}</select></td>
-                            <td><select multiple name="product_id[${transaction.transaction_id}][]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>
+                            <td width="10%"><input type="hidden" name="transaction_id[]" value="${transaction.transaction_id}"><select name="location_id[]" class="form-control" id="locationList-${transaction.transaction_id}">${populateOptions(locationOptions, transaction.location_id)}</select></td>
+                            <td width="20%"><select multiple="multiple"  name="product_id[${transaction.transaction_id}][]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>
                             <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control">${transaction.extra_product}</textarea></td>
                             <td width="15%"><span class="d-flex"><input type="number" name="size1[]" class="form-control" value="${transaction.size1}">*<input type="number" name="size2[]" class="form-control" value="${transaction.size2}"></span></td>
                             <td width="10%"><input type="number" name="price[]" class="form-control" value="${transaction.price}"></td>
@@ -201,7 +201,7 @@ async function populateRows(orderId) {
 
             $('tbody').append(row);
         });
-
+        $('select').select2();
     } catch (error) {
         console.error(error);
     }

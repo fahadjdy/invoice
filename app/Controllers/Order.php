@@ -96,7 +96,7 @@ class Order extends BaseController
             $data['transactions'] = $transactionModel->where('orders_id', $orders_id)->findAll();
 
             if(empty($data['data'])){
-               return redirect()->to('addOrUpdateOrders');
+               return redirect()->to('orders/addOrUpdateOrders');
             }
             $data['edit'] = $orders_id;
             $data['pageTitle'] = 'Edit Orders';
@@ -141,7 +141,7 @@ class Order extends BaseController
     public function getLocationList(){
 
         $LocationModel = new LocationModel();
-        $locations = $LocationModel->select('location.name as location_name , location_id')->findAll();
+        $locations = $LocationModel->select('CONCAT( location.code , " : ", location.name) as location_name , location_id')->findAll();
 
         $data = [];
         foreach ($locations as $location) {
@@ -215,7 +215,7 @@ class Order extends BaseController
         } else {
             $ordersId = $ordersModel->insert($ordersData);
         }
-    
+   
         // Prepare to save transaction data
         $transactionModel = new TransactionModel();
         $locations = $this->request->getPost('location_id');
@@ -226,12 +226,12 @@ class Order extends BaseController
         $prices = $this->request->getPost('price');
         $qtys = $this->request->getPost('qty');
         $transactionIds = $this->request->getPost('transaction_id');
-        // p($transactionIds);
         
         foreach ($locations as $index => $locationId) {
-            // Convert the inner array of product IDs to a comma-separated string
-            $productIds = isset($productsArray[$transactionIds[$index]]) ? implode(",", $productsArray[$transactionIds[$index]]) : '';
           
+            // Convert the inner array of product IDs to a comma-separated string       
+            $temp = array_values($productsArray);
+            $productIds = (!empty($temp[$index])) ? implode(",", $temp[$index]) : '';
             $transactionData = [
                 'orders_id' => $ordersId,
                 'location_id' => $locationId,
@@ -243,6 +243,7 @@ class Order extends BaseController
                 'qty' => $qtys[$index],
                 'total_price' => $prices[$index] * $qtys[$index]
             ];
+            // p($transactionData);
             // Check if we need to update or insert
             if (isset($transactionIds[$index])) {
                 $transactionModel->update($transactionIds[$index], $transactionData);
