@@ -106,7 +106,7 @@ class Order extends BaseController
             $data['pageTitle'] = 'Add Orders';
         }
 
-        return view('Order/addOrUpdateOrders', $data);
+        return view('orders/addOrUpdateOrders', $data);
     }
 
     
