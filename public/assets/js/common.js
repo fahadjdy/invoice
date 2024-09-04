@@ -147,6 +147,30 @@ function fetchLocationOptions() {
     });
 }
 
+function fetchFrameImageOptions() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "post",
+            url: location.origin + "/orders/getFrameImageList",
+            dataType: "json",
+            success: function (response) {
+                if (response.status) {
+                    let options = '';
+                    $.each(response.data, function (index, value) {
+                        options += `<option value="${value.frame_image_id}">${value.frame_image_name}</option>`;
+                    });
+                    resolve(options);
+                } else {
+                    reject("Failed to fetch Frame Image data.");
+                }
+            },
+            error: function () {
+                reject("Error fetching Frame Image data.");
+            }
+        });
+    });
+}
+
 
 // Fetch existing order details
 function fetchOrderDetails(orderId) {
@@ -177,9 +201,10 @@ async function populateRows(orderId) {
         const orderDetails = await fetchOrderDetails(orderId);
 
         // Fetch options for dropdowns
-        const [locationOptions, productOptions] = await Promise.all([
+        const [locationOptions, productOptions,frameImageOption] = await Promise.all([
             fetchLocationOptions(),
-            fetchProductOptions()
+            fetchProductOptions(),
+            fetchFrameImageOptions()
         ]);
         
         // Clear existing rows
@@ -188,8 +213,10 @@ async function populateRows(orderId) {
         
         // Populate rows
         orderDetails.transactions.forEach(transaction => {
+            console.log('frame_image_id' + transaction.frame_image_id)
             const row = `<tr data-transaction-id="${transaction.transaction_id}">
                             <td>${rowIndex++}</td>
+                            <td width="20%"><select  name="frame_image_id[]" class="form-control">${populateOptions(frameImageOption, transaction.frame_image_id)}</select></td>
                             <td width="10%"><input type="hidden" name="transaction_id[]" value="${transaction.transaction_id}"><select name="location_id[]" class="form-control" id="locationList-${transaction.transaction_id}">${populateOptions(locationOptions, transaction.location_id)}</select></td>
                             <td width="20%"><select multiple="multiple"  name="product_id[${transaction.transaction_id}][]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>
                             <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control">${transaction.extra_product}</textarea></td>

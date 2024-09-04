@@ -57,6 +57,7 @@
                     <thead>
                         <tr>
                             <td>Sr.No.</td>
+                            <td>Frame Image</td>
                             <td>Location</td>
                             <td>Product</td>
                             <td>Extra Product</td>
@@ -146,14 +147,16 @@ async function addRow() {
         // let rowIndex = $('tbody tr').length + 1;
 
         // Fetch options for location and product dropdowns
-        const [locationOptions, productOptions] = await Promise.all([
+        const [locationOptions, productOptions , invoiceFormateOptions] = await Promise.all([
             fetchLocationOptions(),
-            fetchProductOptions()
+            fetchProductOptions(),
+            fetchFrameImageOptions()
         ]);
 
         // Construct the new row
         const row = `<tr>
                         <td>${rowIndex}</td>
+                          <td width="20%"><select  name="frame_image_id[]" class="form-control">${invoiceFormateOptions}</select></td>
                         <td width="10%"><select name="location_id[]" class="form-control" id="locationList">${locationOptions}</select></td>
                         <td width="20%"><select multiple="multiple"  name="product_id[${rowIndex}][]" class="form-control">${productOptions}</select></td>
                         <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control"></textarea></td>

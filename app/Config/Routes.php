@@ -88,3 +88,4 @@ $routes->get('/orders/getLocationList','Order::getLocationList',['filter' => 'au
 $routes->get('/orders/getProductList','Order::getProductList',['filter' => 'authFilter']);
 $routes->get('/orders/getOrderDetails/(:num)', 'Order::getOrderDetails/$1',['filter' => 'authFilter']);
 $routes->post('/orders/transaction/delete','Order::deleteTransaction',['filter' => 'authFilter']);
+$routes->post('/orders/getFrameImageList','Order::getFrameImageList',['filter' => 'authFilter']);

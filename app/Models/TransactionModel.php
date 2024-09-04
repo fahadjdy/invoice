@@ -13,7 +13,7 @@ class TransactionModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'transaction_id', 'orders_id', 'party_id', 'location_id', 'product_id', 'extra_product' ,'size1' , 'size2', 'price', 'invoice_id', 'qty', 'total_price', 'created_at', 'updated_at', 'status'
+        'transaction_id', 'orders_id', 'party_id', 'frame_image_id' , 'location_id', 'product_id', 'extra_product' ,'size1' , 'size2', 'price', 'invoice_id', 'qty', 'total_price', 'created_at', 'updated_at', 'status'
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -10,6 +10,8 @@ use App\Models\InvoiceModel;
 use App\Models\TransactionModel;
 use App\Models\LocationModel;
 use App\Models\ProductModel;
+use App\Models\FrameImageModel;
+use App\Models\ProfileModel;
 use TCPDF;
 
 class Order extends BaseController
@@ -38,7 +40,7 @@ class Order extends BaseController
             class="mdi mdi-square-edit-outline me-1"></i> Edit</button></a>';
 
 
-                $action .= '<a href="' . base_url('orders/print/' . $value['orders_id']) . '"><button type="button"  class="btn btn-light btn-sm waves-effect mx-2"> <i
+                $action .= '<a href="' . base_url('orders/print/' . $value['orders_id']) . '" target="_blank"><button type="button"  class="btn btn-light btn-sm waves-effect mx-2"> <i
                 class="mdi mdi-printer me-1"></i> Print</button></a>';
 
                 $action .= '<button type="button" id="' . $value['orders_id'] . '" class="btn btn-light btn-sm waves-effect delete mx-2"> <i
@@ -106,7 +108,7 @@ class Order extends BaseController
             $data['pageTitle'] = 'Add Orders';
         }
 
-        return view('orders/addOrUpdateOrders', $data);
+        return view('order/addOrUpdateOrders', $data);
     }
 
     
@@ -148,6 +150,22 @@ class Order extends BaseController
             $data[] = [
                 'location_id' => $location['location_id'],
                 'location_name' => $location['location_name']
+            ];
+        }
+
+        return $this->response->setJSON(['status' => true, 'data' => $data]);
+    }
+
+    public function getFrameImageList(){
+
+        $FrameImageModel = new FrameImageModel();
+        $FrameImages = $FrameImageModel->select('frame_image.name as frame_image_name , frame_image_id')->findAll();
+
+        $data = [];
+        foreach ($FrameImages as $frame_image) {
+            $data[] = [
+                'frame_image_id' => $frame_image['frame_image_id'],
+                'frame_image_name' => $frame_image['frame_image_name']
             ];
         }
 
@@ -218,6 +236,7 @@ class Order extends BaseController
    
         // Prepare to save transaction data
         $transactionModel = new TransactionModel();
+        $frame_image_id = $this->request->getPost('frame_image_id');
         $locations = $this->request->getPost('location_id');
         $productsArray = $this->request->getPost('product_id'); // Array of arrays
         $extraProducts = $this->request->getPost('extra_product');
@@ -234,6 +253,7 @@ class Order extends BaseController
             $productIds = (!empty($temp[$index])) ? implode(",", $temp[$index]) : '';
             $transactionData = [
                 'orders_id' => $ordersId,
+                'frame_image_id' => $frame_image_id[$index],
                 'location_id' => $locationId,
                 'product_id' => $productIds,
                 'extra_product' => $extraProducts[$index],
@@ -276,38 +296,36 @@ class Order extends BaseController
         $invoiceModel = new InvoiceModel();
         $invoiceHeader = $invoiceModel->select('LOWER(header) as header')->where('invoice_id',$invoice_id)->first();
         
-        $header = [
-            'SrNo.' , 'Product Description' , 'Size','Qty','Price','Amount'
-        ];
-        if(!empty($invoiceHeader) && !empty($invoiceHeader['header'])){
+        if(!empty($invoiceHeader)){
             switch ($invoiceHeader['header']){
-                case 'images': {
+                case 'image': {
                     $header = [
-                        'SrNo.' , 'Image', 'Product Description' , 'Size','Qty','Price','Amount'
+                       'image' => true
                     ];
                     break;
                 }
                 case 'location': {
                     $header = [
-                        'SrNo.' , 'Location', 'Product Description' , 'Size','Qty','Price','Amount'
+                        'location' => true
                     ];
                     break;
                 }
                 case 'image,location': {
                     $header = [
-                        'SrNo.' ,'Image', 'Location', 'Product Description' , 'Size','Qty','Price','Amount'
+                        'image' => true ,
+                        'location' => true
                     ];
                     break;
                 }
                 case '-': {
                     $header = [
-                        'SrNo.' ,  'Product Description' , 'Size','Qty','Price','Amount'
+                       'default' => true
                     ];
                     break;
                 }
                 default: {  
                     $header = [
-                        'SrNo.' ,  'Product Description' , 'Size','Qty','Price','Amount'
+                        'default' => true
                     ];
                 }
             }
@@ -331,6 +349,9 @@ class Order extends BaseController
                         $data['transactions'] = $transactions;
                     }
                     $data['headers'] = $this->getHeaders($orders['invoice_id']);
+
+                    $ProfileModel = new ProfileModel();
+                    $data['profile'] = $ProfileModel->where('profile_id',1)->first();
                    $this->generatePdf($data);
                 }else{
                     return $this->response->setJSON(['status'=> false,'message'=> 'No Orders found']);
@@ -346,30 +367,30 @@ class Order extends BaseController
     public function generatePdf($data) {
         try {
             // Create new PDF document
-            $pdf = new \TCPDF();
+            // $pdf = new \TCPDF();
             
-            // Set document information
-            $pdf->SetCreator(PDF_CREATOR);
-            $pdf->SetAuthor('Your Name');
-            $pdf->SetTitle('Invoice #' . $data['orders']['orders_id']);
-            $pdf->SetSubject('PDF Generation');
-            $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+            // // Set document information
+            // $pdf->SetCreator(PDF_CREATOR);
+            // $pdf->SetAuthor('Your Name');
+            // $pdf->SetTitle('Invoice #' . $data['orders']['orders_id']);
+            // $pdf->SetSubject('PDF Generation');
+            // $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
             
-            // Add a page
-            $pdf->AddPage();
+            // // Add a page
+            // $pdf->AddPage();
             
-            // Set font
-            $pdf->SetFont('helvetica', '', 12);
+            // // Set font
+            // $pdf->SetFont('helvetica', '', 12);
             
             // Build HTML content
             $html = $this->buildHtml($data);
             
             // Write HTML content
-            $pdf->writeHTML($html, true, false, true, 'L', true);
+            // $pdf->writeHTML($html, true, false, true, 'L', true);
             
-            // Output PDF (I: inline display in browser, D: force download, F: save to file, S: return as string)
-            $filename = 'Invoice_' . $data['orders']['orders_id'] . '.pdf';
-            $pdf->Output($filename, 'I'); // 'I' for inline display in browser
+            // // Output PDF (I: inline display in browser, D: force download, F: save to file, S: return as string)
+            // $filename = 'Invoice_' . $data['orders']['orders_id'] . '.pdf';
+            // $pdf->Output($filename, 'I'); // 'I' for inline display in browser
             
             exit; // Ensure no additional output after PDF
         } catch (\Exception $e) {
@@ -382,90 +403,9 @@ class Order extends BaseController
 
     private function buildHtml($data)
     {
-        // Build HTML content for the PDF
-            // This is a simplified example; adjust it according to your $data structure
-            $html = '
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <style>
-                    body { font-family: Arial, sans-serif; }
-                    .header { text-align: center; margin-bottom: 20px; }
-                    .header h1 { margin: 0; }
-                    .info { margin-bottom: 20px; }
-                    .info p { margin: 5px 0; }
-                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                    table, th, td { border: 1px solid black; }
-                    th, td { padding: 8px; text-align: left; }
-                    th { background-color: #f2f2f2; }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <h1>Invoice #' . $data['orders']['invoice_id'] . '</h1>
-                    <p>Date: ' . $data['orders']['created_at'] . '</p>
-                </div>
-                
-              <div class="info">
-                    <h2>Customer Information</h2>
-                    <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-                        <tr>
-                            <th style="text-align: left; width: 30%;">Name:</th>
-                            <td>' . $data['orders']['paty_name'] . '</td>
-                        </tr>
-                        <tr>
-                            <th style="text-align: left;">Address:</th>
-                            <td>' . $data['orders']['paty_address'] . '</td>
-                        </tr>
-                        <tr>
-                            <th style="text-align: left;">Contact:</th>
-                            <td>' . $data['orders']['party_contact'] . '</td>
-                        </tr>
-                        <tr>
-                            <th style="text-align: left;">Email:</th>
-                            <td>' . $data['orders']['party_email'] . '</td>
-                        </tr>
-                    </table>
-                </div>
-
-                
-                <div class="info">
-                    <h2>Order Details</h2>
-                    <p>Order ID: ' . $data['orders']['orders_id'] . '</p>
-                    <p>Showroom: ' . $data['orders']['name'] . '</p>
-                </div>
-                
-                <table>
-                    <thead>
-                        <tr>';
-                        
-            foreach ($data['headers'] as $header) {
-                $html .= '<th>' . $header . '</th>';
-            }
-
-            $html .= '</tr>
-                    </thead>
-                    <tbody>';
-
-            $srno = 1;
-            foreach ($data['transactions'] as $transaction) {
-                $html .= '<tr>
-                    <td>' . $srno++ . '</td>
-                    <td>' . $transaction['product_name'] . ' (' . $transaction['extra_product'] . ')</td>
-                    <td>' . $transaction['size1'] . ', ' . $transaction['size2'] . '</td>
-                    <td>' . $transaction['qty'] . '</td>
-                    <td>' . $transaction['price'] . '</td>
-                    <td>' . $transaction['total_price'] . '</td>
-                </tr>';
-            }
-
-            $html .= '</tbody>
-                </table>
-                
-            </body>
-            </html>';
-
-            return $html;
+        echo view('Invoice/invoice1',$data);
+        exit;
+        // p($data);
     }
 }
 
