@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 04, 2024 at 07:55 PM
+-- Generation Time: Sep 05, 2024 at 06:26 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -116,8 +116,8 @@ CREATE TABLE `orders` (
 INSERT INTO `orders` (`orders_id`, `name`, `party_id`, `invoice_id`, `created_at`, `updated_at`, `status`) VALUES
 (1, 'chhapi showroom 12', 1, 1, '2024-08-19 14:17:20', '2024-08-19 14:17:20', 1),
 (2, 'patan 1', 1, 2, '2024-08-27 16:03:10', '2024-08-27 16:03:10', 1),
-(3, 'fahad ka personal', 1, 1, '2024-08-27 16:04:15', '2024-08-27 16:04:15', 1),
-(12, 'basu wala', 1, 1, '2024-08-28 15:55:49', '2024-08-28 15:55:49', 1);
+(3, 'fahad ka personal', 1, 3, '2024-08-27 16:04:15', '2024-08-27 16:04:15', 1),
+(12, 'basu wala', 1, 4, '2024-08-28 15:55:49', '2024-08-28 15:55:49', 1);
 
 -- --------------------------------------------------------
 
@@ -217,7 +217,7 @@ CREATE TABLE `profile` (
 --
 
 INSERT INTO `profile` (`profile_id`, `name`, `contact`, `email`, `logo`, `terms_condition`, `address`) VALUES
-(1, 'Fine Aliuminium System', 9824528608, 'saddam.badhra1@gmail.com', '1723485220_b53f80deb0082487734d.png', '1. Good sold will not be return\r\n2. 50% advance must befor start work', 'Golen Plaza Complex, Behind Madhvi, Chhapi Highway,Chhapi, Gujarat-385210');
+(1, 'Fine Aliuminium System', 9824528608, 'saddam.badhra1@gmail.com', '1725553052_200723a62fb62c5d6b99.jpg', '1. Good sold will not be return <br>\r\n2. 50% advance must befor start work <br>\r\n3. Subject to \'Delhi\' jurisdiction only.', 'GOLDEN PLAZA COMPLEX, BEHIND MADHVI , AHMEDABAD PALANPUR HIGHWAY, CHHAPI HIGHWAY ROAD\r\n\r\nB/H RAJOSNA BUS STEND, CHHAPI-385210 GUJARAT');
 
 -- --------------------------------------------------------
 
@@ -250,13 +250,18 @@ INSERT INTO `transaction` (`transaction_id`, `orders_id`, `frame_image_id`, `loc
 (9, 1, 3, 3, '11', 'extra', 15.00, 4.00, 450, 6, 2700, '2024-08-19 14:29:57', '2024-08-19 14:29:57', 1),
 (15, 2, 2, 3, '14,11', 'www', 2.00, 4.00, 120, 1, 120, '2024-08-27 16:03:10', '2024-08-27 16:03:10', 1),
 (16, 3, 2, 1, '14,11', 'fdfd', 4.00, 5.00, 435, 1, 435, '2024-08-27 16:04:15', '2024-08-27 16:04:15', 1),
-(17, 3, 3, 1, '14', 'dsfsdf', 4.00, 4.00, 360, 1, 360, '2024-08-27 16:04:15', '2024-08-27 16:04:15', 1),
+(17, 3, 3, 3, '14', 'dsfsdf', 4.00, 4.00, 360, 1, 360, '2024-08-27 16:04:15', '2024-08-27 16:04:15', 1),
 (20, 12, 2, 4, '14', '', 4.00, 3.00, 350, 1, 350, '2024-08-28 15:55:49', '2024-08-28 15:55:49', 1),
 (21, 12, 3, 3, '14,11', 'test', 3.00, 6.00, 450, 1, 450, '2024-08-29 16:08:44', '2024-08-29 16:08:44', 1),
 (22, 15, 2, 3, '1', 'test', 2.00, 2.00, 150, 1, 150, '2024-09-02 15:23:14', '2024-09-02 15:23:14', 1),
 (23, 14, 2, 3, '1', 'd', 2.00, 3.00, 450, 1, 450, '2024-09-02 15:28:12', '2024-09-02 15:28:12', 1),
 (24, 30, 2, 1, '14', 'fdf', 23.00, 3.00, 4, 3, 12, '2024-09-03 17:16:02', '2024-09-03 17:16:02', 1),
-(25, 30, 2, 1, '14,11', 'test', 2.00, 2.00, 21, 2, 42, '2024-09-03 17:26:31', '2024-09-03 17:26:31', 1);
+(25, 30, 2, 1, '14,11', 'test', 2.00, 2.00, 21, 2, 42, '2024-09-03 17:26:31', '2024-09-03 17:26:31', 1),
+(27, 12, 2, 1, '14,11', 'fghf', 2.00, 2.00, 243, 2, 486, '2024-09-05 16:24:47', '2024-09-05 16:24:47', 1),
+(28, 12, 3, 4, '14,11', 'tets', 2.00, 5.00, 345, 2, 690, '2024-09-05 16:24:47', '2024-09-05 16:24:47', 1),
+(29, 12, 2, 1, '11', 'gg', 3.00, 3.00, 435, 2, 870, '2024-09-05 16:25:17', '2024-09-05 16:25:17', 1),
+(30, 12, 2, 1, '11,11', 'yu', 3.00, 3.00, 54, 3, 162, '2024-09-05 16:25:53', '2024-09-05 16:25:53', 1),
+(31, 12, 2, 1, '', 'hrt', 3.00, 3.00, 65, 3, 195, '2024-09-05 16:25:53', '2024-09-05 16:25:53', 1);
 
 -- --------------------------------------------------------
 
@@ -405,7 +410,7 @@ ALTER TABLE `profile`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `user`

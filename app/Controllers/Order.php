@@ -344,7 +344,43 @@ class Order extends BaseController
                 if(!empty($orders)){
                     $data['orders'] = $orders;   
                     $transactionModel = new TransactionModel();
-                    $transactions = $transactionModel->select('transaction.extra_product,transaction.size1 , transaction.size2, transaction.price ,transaction.qty , transaction.total_price, transaction.created_at , l.name as location_name,p.name as product_name')->join('location l','transaction.location_id  =  l.location_id','left')->join('product p','transaction.product_id  =  p.product_id','left')->where('orders_id',$orders['orders_id'])->findAll();
+
+                    $transactions = $transactionModel->select(' transaction.transaction_id,
+                            transaction.orders_id,
+                            fi.url as frame_image_url,
+                            transaction.location_id,
+                            CONCAT(GROUP_CONCAT(DISTINCT p.name ORDER BY p.name SEPARATOR ", "),",",transaction.extra_product) AS product_names,
+                            transaction.size1,
+                            transaction.size2,
+                            transaction.price,
+                            transaction.qty,
+                            transaction.total_price,
+                            transaction.created_at,
+                            transaction.updated_at,
+                            transaction.status,
+                            l.name AS location_name')
+                            ->join('frame_image fi','fi.frame_image_id = transaction.frame_image_id','left')
+                            ->join('location l', 'transaction.location_id = l.location_id', 'left')
+                            ->join('product p', 'FIND_IN_SET(p.product_id, transaction.product_id) > 0', 'left')
+                            ->where('transaction.orders_id', $orders_id)
+                            ->groupBy('
+                                transaction.transaction_id, 
+                                transaction.orders_id, 
+                                transaction.frame_image_id, 
+                                transaction.location_id, 
+                                transaction.size1, 
+                                transaction.size2, 
+                                transaction.price, 
+                                transaction.qty, 
+                                transaction.total_price, 
+                                transaction.created_at, 
+                                transaction.updated_at, 
+                                transaction.status, 
+                                l.name
+                            ')
+                            ->get()
+                            ->getResultArray();
+
                     if(!empty($transactions)){
                         $data['transactions'] = $transactions;
                     }
@@ -365,47 +401,8 @@ class Order extends BaseController
                 
     }
     public function generatePdf($data) {
-        try {
-            // Create new PDF document
-            // $pdf = new \TCPDF();
-            
-            // // Set document information
-            // $pdf->SetCreator(PDF_CREATOR);
-            // $pdf->SetAuthor('Your Name');
-            // $pdf->SetTitle('Invoice #' . $data['orders']['orders_id']);
-            // $pdf->SetSubject('PDF Generation');
-            // $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-            
-            // // Add a page
-            // $pdf->AddPage();
-            
-            // // Set font
-            // $pdf->SetFont('helvetica', '', 12);
-            
-            // Build HTML content
-            $html = $this->buildHtml($data);
-            
-            // Write HTML content
-            // $pdf->writeHTML($html, true, false, true, 'L', true);
-            
-            // // Output PDF (I: inline display in browser, D: force download, F: save to file, S: return as string)
-            // $filename = 'Invoice_' . $data['orders']['orders_id'] . '.pdf';
-            // $pdf->Output($filename, 'I'); // 'I' for inline display in browser
-            
-            exit; // Ensure no additional output after PDF
-        } catch (\Exception $e) {
-            // Handle exception
-            return $this->response->setJSON(['status' => false, 'message' => 'Failed to generate PDF: ' . $e->getMessage()]);
-        }
-    }
-    
-    
-
-    private function buildHtml($data)
-    {
         echo view('Invoice/invoice1',$data);
-        exit;
-        // p($data);
     }
+    
 }
 
