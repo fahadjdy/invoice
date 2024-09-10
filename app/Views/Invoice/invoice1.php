@@ -10,6 +10,8 @@
     $is_location    =  !empty($headers['location']) ?true :  'false';
     $is_image       =  !empty($headers['image']) ? true : 'false';
 
+    $datetime = $orders['created_at'] ?? time();
+    $date = date('d-m-Y', strtotime($datetime));
 ?>
 
 <!DOCTYPE html>
@@ -184,7 +186,7 @@
                 align="center"><?=$profile['address']?></p>
             <p
                 style="margin-bottom:0%;font-size:10px;margin:3px;letter-spacing:.1px;margin-left: 10px;font-weight: normal !important;">
-                <span>Mo. : <?=$profile['contact']??null?></span> , <span>Email : <?=$profile['email']??'-'?></span></p>
+                <span>Mo. : <?=$profile['contact']??null?></span>  <?php if(!empty($profile['email'])) { ?>, <span>Email : <?=$profile['email']??'-'?></span> <?php } ?></p>
            
         </div>
         <div style="width:30%;float:right;padding: 0%;text-align: center;height: 170px;">
@@ -207,7 +209,7 @@
                         colspan="3">Fahad Iliyas Jadiya</td>
                     <td class="inv-dtl-th">Date</td>
                     <td class="colon-td"> : </td>
-                    <td>28-12-2022</td>
+                    <td><?=$datetime?></td>
                 </tr>
                 <tr>
                     <td class="inv-dtl-th">Address</td>
@@ -232,7 +234,7 @@
                     <?php if($is_location === true){ ?> <th style="text-align: center;" width="11%">Location</th> <?php $colSpan++; } ?>
                     <th>Product Description</th>
                     <th style="text-align: right;" width="7%">Qty.</th>
-                    <th class="text-center" width="6%">Size(sqft.)</th>
+                    <th class="text-center" width="6%">Size(inch.)</th>
                     <th style="text-align: right;" width="10%">Sqft.</th>
                     <th style="text-align: right;" width="8%">Price</th>
                     <th style="text-align: right;" width="11%">Amount</th>
@@ -246,14 +248,14 @@
                         foreach($transactions as $key => $val){ 
                         $price = $val['price'] * $val['qty']
                     ?>
-                <tr>
+                <tr style="border-bottom:1px solid gray">
                     <td class="text-center" style=""><?=$key+1?></td>
                     <?php if($is_image === true){ ?> <td style="text-align: center;display: flex;justify-content: center;"><img src="<?=base_url('assets/images/FrameImage/'.$val['frame_image_url'])?>" alt="demo-image" width="100px" height="100px"></td> <?php } ?>
                         <?php if($is_location === true){ ?>  <td><?=$val['location_name']?></td> <?php } ?>
                     <td style="text-transform:uppercase"><?=$val['product_names']?>  </td>
                     <td style="padding-left:0% !important"><?=$val['qty']?></td>
                     <td style="text-transform:uppercase"><?=$val['size1'].'*'.$val['size2']?></td>
-                    <td><?=$val['size1']*$val['size2']?></td>
+                    <td><?=round(convertSquareInchesToSquareFeet($val['size1'])*convertSquareInchesToSquareFeet($val['size2']),2)?></td>
                     <td style="border-right: 1px solid gray !important;"><?=$val['price']?></td>
                     <td><?=$price?></td>
                 </tr>

@@ -13,3 +13,16 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+
+ function convertSquareInchesToSquareFeet($squareInches) {
+    // Ensure the input is a valid number
+    if (!is_numeric($squareInches) || $squareInches < 0) {
+        throw new InvalidArgumentException('Input must be a non-negative number.');
+    }
+
+    // Conversion factor: 1 square foot = 144 square inches
+    $squareFeet = $squareInches / 144;
+    
+    return $squareFeet;
+}
