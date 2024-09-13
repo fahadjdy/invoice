@@ -215,7 +215,7 @@ class Product extends BaseController
             $data['pageTitle'] = 'Add Frame Image';
         }
 
-        return view('Product/addOrUpdateFrameImage', $data);
+        return view('product/addOrUpdateFrameImage', $data);
     }
 
     

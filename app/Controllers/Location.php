@@ -131,6 +131,6 @@ class Location extends BaseController
             $data['pageTitle'] = 'Add Location';
         }
 
-        return view('Location/addOrUpdateLocation', $data);
+        return view('location/addOrUpdateLocation', $data);
     }
 }
