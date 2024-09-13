@@ -131,7 +131,7 @@ class Product extends BaseController
             $data['pageTitle'] = 'Add Product';
         }
 
-        return view('Product/addOrUpdateProduct', $data);
+        return view('product/addOrUpdateProduct', $data);
     }
 
 
