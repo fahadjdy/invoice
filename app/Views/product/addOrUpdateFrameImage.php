@@ -96,7 +96,9 @@
             success: function (response) {
 
                 if(response.status){
-                    successToast(response.message);
+                    location.href = location.origin + '/frame-image';
+                    // successToast(response.message);
+
                 }else{
                     errorToast(response.message);
                 }
