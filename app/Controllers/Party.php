@@ -60,7 +60,7 @@ class Party extends BaseController
     public function getPartyListAjax()
     {
         $PartyModel = new PartyModel();
-        $result = $PartyModel->findAll();
+        $result = $PartyModel->orderBy('party_id','DESC')->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 

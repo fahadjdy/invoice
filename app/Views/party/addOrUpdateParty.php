@@ -125,7 +125,8 @@
             success: function(response) {
 
                 if (response.status) {
-                    successToast(response.message);
+                    location.href = location.origin + '/party';
+                    // successToast(response.message);
                 } else {
                     errorToast(response.message);
                 }

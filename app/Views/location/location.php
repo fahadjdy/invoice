@@ -14,7 +14,6 @@
                 <thead>
                     <tr>
                         <th>Location Name</th>
-                        <th>Location Code</th>
                         <th>Created Date</th>
                         <th>Updated Date</th>
                         <th>Status</th>
@@ -51,7 +50,6 @@ $(document).ready(function () {
         },
         columns: [
             { data: "name" },
-            { data: "code" },
             { data: "created_at" },
             { data: "updated_at" },
             { data: "status" },

@@ -6,6 +6,7 @@
     <div class="row card p-3">
         <form id="OrdersForm" method="post">
             <div class="row">
+            <?php  if(!empty($data['orders_id'])) { ?>
                 <div class="col-lg-1">
                     <label for="" class="p-0 m-0">Orders Id</label>
                     <div class="input-group mb-2">
@@ -16,6 +17,7 @@
                             placeholder="Orders orders_id" required="" value="<?= (isset($data)) ? $data['orders_id'] : '' ?>">
                     </div>
                 </div>
+                <?php } ?>
 
                 <div class="col-lg-3">
                     <label for="" class="p-0 m-0">Select Party Name</label>
@@ -196,10 +198,10 @@ async function addRow() {
 
     $(document).ready(function() {
         init();
-        
-        const orderId = <?= (isset($data)) ? $data['orders_id'] : '' ?>; // Replace with actual order ID
-        populateRows(orderId);
-
+        <?php  if(!empty($data['orders_id'])) { ?>
+            const orderId = <?=$data['orders_id']?>; // Replace with actual order 
+            populateRows(orderId);
+        <?php } ?>
         $('#OrdersForm').validate({
             rules: {
                 name: {

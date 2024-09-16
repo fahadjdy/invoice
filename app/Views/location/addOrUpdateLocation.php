@@ -23,7 +23,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4">
+                <!-- <div class="col-lg-4">
                     <label for="" class="p-0 m-0">Location code</label>
                     <div class="input-group mb-2">
                         <div class="input-group-prepend">
@@ -32,7 +32,7 @@
                         <input maxlength="50" autocomplete="off" type="text" id="code" name="code" class="form-control p-0 px-2"
                             placeholder="Location code" required="" value="<?=(isset($data)) ? $data['code'] : ''?>">
                     </div>
-                </div>
+                </div> -->
 
                 <label for="" class="p-0 m-0"> Status</label>
                 <div class="input-group mb-3">
@@ -103,7 +103,8 @@
             success: function (response) {
 
                 if(response.status){
-                    successToast(response.message);
+                    location.href = location.origin + '/location';
+                    // successToast(response.message);
                 }else{
                     errorToast(response.message);
                 }

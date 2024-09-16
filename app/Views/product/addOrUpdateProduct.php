@@ -18,8 +18,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                         </div>
-                        <input maxlength="50" autocomplete="off" type="text" id="name" name="name" class="form-control p-0 px-2"
-                            placeholder="name" required="" value="<?=(isset($data)) ? $data['name'] : ''?>">
+                        <textarea id="name" name="name" rows="4" class="form-control p-0 px-2"
+                        placeholder="name" required=""><?=(isset($data)) ? $data['name'] : ''?></textarea>
                     </div>
                 </div>
 
@@ -103,7 +103,8 @@
             success: function (response) {
 
                 if(response.status){
-                    successToast(response.message);
+                    location.href = location.origin + '/product';
+                    // successToast(response.message);
                 }else{
                     errorToast(response.message);
                 }
