@@ -5,11 +5,15 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\AuthModel;
+use App\Models\ProfileModel;
 
 class Auth extends BaseController
 {
     public function login(){
-        return view('login');
+
+        $ProfileModel = new ProfileModel();
+        $data['profile'] = $ProfileModel->where('profile_id',1)->first();
+        return view('login',$data);
     }
 
 

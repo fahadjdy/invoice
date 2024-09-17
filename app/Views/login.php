@@ -29,11 +29,12 @@
                 <div class="col-md-10">
                     <div class="text-center mb-5">
                         <a href="index.html" class="auth-logo">
-                            <img src="<?=base_url('assets/images/logo-dark.png')?>" alt="Logo Dark" height="28" class="auth-logo-dark">
-                            <img src="<?=base_url('assets/images/logo-light.png')?>" alt="Logo Light" height="28"
+                           
+                            <img src="<?=base_url('assets/images/profile/'.$profile['logo'])?>" alt="<?=$profile['name']?>" height="100px" class="auth-logo-dark">
+                            <img src="<?=base_url('assets/images/profile/'.$profile['logo'])?>" alt="<?=$profile['name']?>" height="100px"
                                 class="auth-logo-light">
                         </a>
-                        <p class="font-size-15 text-muted mt-3">Responsive <b>Bootstrap 5</b> Admin Dashboard</p>
+                        <p class="font-size-15 text-muted mt-3">Admin Login</p>
                     </div>
                     <div class="card overflow-hidden">
                         <div class="row g-0">
