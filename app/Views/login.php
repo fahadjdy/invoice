@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Login to Admin Dashboard  </title>
+    <title>Login to Admin Dashboard <?=$profile['name']?> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Pichforest" name="author" />
@@ -28,7 +28,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="text-center mb-5">
-                        <a href="index.html" class="auth-logo">
+                        <a href="<?=base_url()?>" class="auth-logo">
                            
                             <img src="<?=base_url('assets/images/profile/'.$profile['logo'])?>" alt="<?=$profile['name']?>" height="100px" class="auth-logo-dark">
                             <img src="<?=base_url('assets/images/profile/'.$profile['logo'])?>" alt="<?=$profile['name']?>" height="100px"
@@ -70,12 +70,6 @@
                                                 </div>
                                             </div>
 
-
-                                            <div class="mt-4 text-center">
-                                                <hr>
-
-                                            Don't Have Account? <a href="<?=base_url('register')?>">  Register Here</a>
-                                            </div>
                                         </form>
                                     </div>
 
