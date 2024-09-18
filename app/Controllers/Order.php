@@ -76,11 +76,12 @@ class Order extends BaseController
     {
 
         $orders_id = $this->request->getPost('orders_id');
-        $OrdersModel = new OrdersModel();
+        $OrdersModel = new OrdersModel();  
+        $transactionModel = new TransactionModel();
 
-        $status = $OrdersModel->deletOrders($orders_id);
-
-        if ($status)
+        $status = $OrdersModel->where("orders_id", $orders_id)->delete();
+        $status1 = $transactionModel->where("orders_id", $orders_id)->delete();
+        if ($status && $status1)
             echo json_encode(['msg' => 'Orders Deleted Successfully..!', 'status' => true]);
         else
             echo json_encode(['msg' => 'Something went wrong..!', 'status' => false]);

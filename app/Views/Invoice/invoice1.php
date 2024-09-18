@@ -202,11 +202,11 @@
                     <td colspan="3" width="50%" style="font-style:italic;font-weight: bold;">Party Details </td>
                     <td class="inv-dtl-th">Invoice No.</td>
                     <td class="colon-td"> : </td>
-                    <td>INV0013</td>
+                    <td><?=$orders['orders_id']?></td>
                 </tr>
                 <tr>
                     <td style="width:50%;text-transform: uppercase;vertical-align: top !important;" rowspan="1"
-                        colspan="3">Fahad Iliyas Jadiya</td>
+                        colspan="3"><?=$orders['paty_name']?></td>
                     <td class="inv-dtl-th">Date</td>
                     <td class="colon-td"> : </td>
                     <td><?=$datetime?></td>
@@ -214,12 +214,12 @@
                 <tr>
                     <td class="inv-dtl-th">Address</td>
                     <td class="colon-td"> : </td>
-                    <td>M/S DARVANI ABIDBHAI HASANBHAI, VERAVAL, GUJRAT</td>
+                    <td><?=$orders['paty_address']?></td>
                 </tr>
                 <tr>
                     <td class="inv-dtl-th">Contact</td>
                     <td class="colon-td"> : </td>
-                    <td>7203070468</td>
+                    <td><?=$orders['party_contact']?></td>
                 </tr>
             </tbody>
         </table>
