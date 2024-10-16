@@ -41,7 +41,7 @@
                 <div class="col-lg-3">
                     <label for="" class="p-0 m-0 ">Select Order Status</label>
                     <div class="input-group mb-3">
-                        <select class="form-control p-0 px-2 form-select" name="status" id="status1">
+                        <select class="form-control p-0 px-2 form-select" name="status" id="status1" style="min-width:100px;width:100%;">
                             <option value="1" <?= (isset($data['status']) && $data['status'] == 1) ? 'selected' : '' ?>>Active</option>
                             <option value="0" <?= (isset($data['status']) && $data['status'] == 0) ? 'selected' : '' ?>>Deactive</option>
                         </select>
@@ -158,13 +158,21 @@ async function addRow() {
         // Construct the new row
         const row = `<tr>
                         <td>${rowIndex}</td>
-                          <td width="20%"><select  name="frame_image_id[]" class="form-control">${invoiceFormateOptions}</select></td>
-                        <td width="10%"><select name="location_id[]" class="form-control" id="locationList">${locationOptions}</select></td>
-                        <td width="20%"><select multiple="multiple"  name="product_id[${rowIndex}][]" class="form-control">${productOptions}</select></td>
+                          <td width="20%"><select name="frame_image_id[]" class="form-control">
+                              <option value="">Select Frame Image</option>
+                              ${invoiceFormateOptions}
+                          </select></td>
+                        <td width="10%"><select name="location_id[]" class="form-control" id="locationList">
+                              <option value="">Select Location</option>
+                              ${locationOptions}
+                          </select></td>
+                        <td width="20%"><select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control">
+                            ${productOptions}
+                        </select></td>
                         <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control"></textarea></td>
-                        <td width="15%"><span class="d-flex"><input type="number" name="size1[]" class="form-control">*<input type="number" name="size2[]" class="form-control"></span></td>
-                        <td width="10%"><input type="number" name="price[]" class="form-control"></td>
-                        <td width="5%"><input type="number" name="qty[]" class="form-control"></td>
+                        <td width="15%"><span class="d-flex"><input type="number" name="size1[]" style="width: 100%; min-width: 70px;" class="form-control">*<input type="number" name="size2[]" style="width: 100%; min-width: 70px;" class="form-control"></span></td>
+                        <td width="10%"><input type="number" name="price[]" style="width: 100%; min-width: 60px;" class="form-control"></td>
+                        <td width="5%"><input type="number" name="qty[]" class="form-control" style="appearance: textfield; -moz-appearance: textfield; -webkit-appearance: textfield;"></td>
                         <td><button type="button" class="btn btn-danger removeButton" onClick="removeRow(this);">Remove</button></td>
                     </tr>`;
 
@@ -237,3 +245,5 @@ async function addRow() {
 </script>
 
 <?= $this->endSection('js') ?>
+
+

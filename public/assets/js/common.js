@@ -216,13 +216,13 @@ async function populateRows(orderId) {
             console.log('frame_image_id' + transaction.frame_image_id)
             const row = `<tr data-transaction-id="${transaction.transaction_id}">
                             <td>${rowIndex++}</td>
-                            <td width="20%"><select  name="frame_image_id[]" class="form-control">${populateOptions(frameImageOption, transaction.frame_image_id)}</select></td>
-                            <td width="10%"><input type="hidden" name="transaction_id[]" value="${transaction.transaction_id}"><select name="location_id[]" class="form-control" id="locationList-${transaction.transaction_id}">${populateOptions(locationOptions, transaction.location_id)}</select></td>
-                            <td width="20%"><select multiple="multiple"  name="product_id[${transaction.transaction_id}][]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>
+                            <td width="20%"><select  name="frame_image_id[]" class="form-control">  <option value="0">Select Frame Image</option> ${populateOptions(frameImageOption, transaction.frame_image_id)}</select></td>
+                            <td width="10%"><input type="hidden" name="transaction_id[]" value="${transaction.transaction_id}"><select name="location_id[]" class="form-control" id="locationList-${transaction.transaction_id}"> <option value="">Select Location</option> ${populateOptions(locationOptions, transaction.location_id)}</select></td>
+                            <td width="20%"><select multiple="multiple"  name="product_id[${transaction.transaction_id}][]" class="form-control">${populateOptions(productOptions, transaction.product_id)}</select></td>                           
                             <td><textarea name="extra_product[]" cols="30" rows="3" class="form-control">${transaction.extra_product}</textarea></td>
-                            <td width="15%"><span class="d-flex"><input type="number" name="size1[]" class="form-control" value="${transaction.size1}">*<input type="number" name="size2[]" class="form-control" value="${transaction.size2}"></span></td>
-                            <td width="10%"><input type="number" name="price[]" class="form-control" value="${transaction.price}"></td>
-                            <td width="5%"><input type="number" name="qty[]" class="form-control" value="${transaction.qty}"></td>
+                            <td width="15%"><span class="d-flex"><input type="number" name="size1[]"  style="width: 100%; min-width: 70px;" class="form-control" value="${transaction.size1}">*<input type="number" name="size2[]" style="width: 100%; min-width: 70px;" class="form-control" value="${transaction.size2}"></span></td>
+                            <td width="10%"><input type="number" name="price[]"  style="width: 100%; min-width: 60px;" class="form-control" value="${transaction.price}"></td>
+                            <td width="5%"><input type="number" name="qty[]" class="form-control"  style="width: 100%; min-width: 60px; appearance: textfield; -moz-appearance: textfield; -webkit-appearance: textfield;" value="${transaction.qty}"></td>
                             <td><button type="button" class="btn btn-danger removeButton" onClick="removeRow(this);">Remove</button></td>
                         </tr>`;
 

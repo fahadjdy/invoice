@@ -239,7 +239,7 @@ class Order extends BaseController
         $transactionModel = new TransactionModel();
         $frame_image_id = $this->request->getPost('frame_image_id');
         $locations = $this->request->getPost('location_id');
-        $productsArray = $this->request->getPost('product_id'); // Array of arrays
+        $productsArray = $this->request->getPost('product_id'); 
         $extraProducts = $this->request->getPost('extra_product');
         $sizes1 = $this->request->getPost('size1');
         $sizes2 = $this->request->getPost('size2');
@@ -248,15 +248,11 @@ class Order extends BaseController
         $transactionIds = $this->request->getPost('transaction_id');
         
         foreach ($locations as $index => $locationId) {
-          
-            // Convert the inner array of product IDs to a comma-separated string       
-            $temp = array_values($productsArray);
-            $productIds = (!empty($temp[$index])) ? implode(",", $temp[$index]) : '';
+                    
             $transactionData = [
                 'orders_id' => $ordersId,
                 'frame_image_id' => $frame_image_id[$index],
                 'location_id' => $locationId,
-                'product_id' => $productIds,
                 'extra_product' => $extraProducts[$index],
                 'size1' => $sizes1[$index],
                 'size2' => $sizes2[$index],
@@ -264,11 +260,14 @@ class Order extends BaseController
                 'qty' => $qtys[$index],
                 'total_price' => $prices[$index] * $qtys[$index]
             ];
-            // p($transactionData);
-            // Check if we need to update or insert
+          
             if (isset($transactionIds[$index])) {
+                $productIds =  (isset($productsArray[$transactionIds[$index]])) ? implode(",", $productsArray[$transactionIds[$index]]) : 0 ;;
+                $transactionData['product_id'] = $productIds;
                 $transactionModel->update($transactionIds[$index], $transactionData);
             } else {
+                $productIds = (!empty($productsArray[$index])) ? implode(",", $productsArray[$index]) : '0';
+                $transactionData['product_id'] = $productIds;
                 $transactionModel->insert($transactionData);
             }
         }
@@ -378,7 +377,7 @@ class Order extends BaseController
                                 transaction.updated_at, 
                                 transaction.status, 
                                 l.name
-                            ')
+                            ')                            
                             ->get()
                             ->getResultArray();
 
