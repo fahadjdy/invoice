@@ -60,17 +60,18 @@
                     </div>
                 </div>
 
+                <div style="overflow-x: auto; width: 100%;">
                 <table width="100%" class="table">
                     <thead>
                         <tr>
-                            <td>Sr.No.</td>
-                            <td>Frame Image</td>
-                            <td>Location</td>
-                            <td>Product</td>
-                            <td>Extra Product</td>
-                            <td>Size <small>(in inch)</small></td>
-                            <td>Price</td>
-                            <td>Qty.</td>
+                            <td style="width:100px">Sr.No.</td>
+                            <td style="width:200px">Frame Image</td>
+                            <td style="width:250px">Location</td>
+                            <td style="width:400px">Product</td>
+                            <td style="width:100px">Extra Product</td>
+                            <td style="width:200px">Size <small>(in inch)</small></td>
+                            <td style="width:100px">Price</td>
+                            <td style="width:100px">Qty.</td>
                             <td>Actions</td>
                         </tr>
                     </thead>
@@ -84,6 +85,7 @@
                         </tr>
                     </tfoot>
                 </table>
+                </div>
 
                 <div class="d-flex justify-content-end">
                     <input type="submit" class="btn btn-primary px-4" value="Submit" id="SubmitBtn">
@@ -236,38 +238,38 @@
         // Generate new row
         const row = `<tr data-row-index="${rowIndex}">
                         <td>${rowIndex}</td>
-                        <td width="20%">
+                        <td width="200px">
                             ${transactionId ? `<input type="hidden" name="transaction_id[]" value="${transactionId}">` : ''}
                             <select name="frame_image_id[]" class="form-control select2-frame">
                                 <option value="">Select Frame Image</option>
                                 ${frameImageOptions}
                             </select>
                         </td>
-                        <td width="20%">
+                        <td width="350px">
                             <select multiple="multiple" name="location_id[${rowIndex}][]" class="form-control location-select select2-location" onchange="updateSizePriceQty(this, ${rowIndex})">
                                 ${locationOptions}
                             </select>
                         </td>
-                        <td width="20%">
+                        <td width="400px">
                             <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product">
                                 ${productOptions}
                             </select>
                         </td>
                         <td>
-                            <textarea name="extra_product[]" cols="30" rows="3" class="form-control"></textarea>
+                            <textarea style="width:150px" name="extra_product[]" cols="30" rows="3" class="form-control"></textarea>
                         </td>
-                        <td width="15%" class="size-price-qty-container-${rowIndex}">
+                        <td width="350px" class="size-price-qty-container-${rowIndex}">
                             <div class="location-fields">
-                                <span class="d-flex">
-                                    <input type="number" name="size1[${rowIndex}][]" class="form-control"> *
-                                    <input type="number" name="size2[${rowIndex}][]" class="form-control">
+                                <span class="d-flex" style="width:200px">
+                                    <input type="number" style="width:auto" name="size1[${rowIndex}][]" class="form-control"> *
+                                    <input type="number" style="width:auto" name="size2[${rowIndex}][]" class="form-control">
                                 </span>
                             </div>
                         </td>
-                        <td width="10%" class="price-container-${rowIndex}">
+                        <td width="100px" class="price-container-${rowIndex}">
                             <input type="number" name="price[${rowIndex}][]" class="form-control">
                         </td>
-                        <td width="5%" class="qty-container-${rowIndex}">
+                        <td width="100px" class="qty-container-${rowIndex}">
                             <input type="number" name="qty[${rowIndex}][]" value="1" class="form-control">
                         </td>
                         <td>
@@ -375,7 +377,7 @@
             sizeContainer.append(`
                 <div class="location-fields">
                     <small>${locationName}</small>
-                    <span class="d-flex">
+                    <span class="d-flex" style="width:200px">
                         <input type="number" name="size1[${rowIndex}][]" class="form-control" value="${size1Value}">*
                         <input type="number" name="size2[${rowIndex}][]" class="form-control" value="${size2Value}">
                     </span>
@@ -383,14 +385,14 @@
             `);
 
             priceContainer.append(`
-                <div class="location-fields">
+                <div class="location-fields" style="width:100px">
                     <small>${locationName}</small>
                     <input type="number" name="price[${rowIndex}][]" class="form-control" value="${priceValue}">
                 </div>
             `);
 
             qtyContainer.append(`
-                <div class="location-fields">
+                <div class="location-fields"  style="width:100px">
                     <small>${locationName}</small>
                     <input type="number" name="qty[${rowIndex}][]" class="form-control" value="${qtyValue}">
                 </div>
@@ -400,7 +402,7 @@
 
     function removeRow(button, transactionId) {
         if (!transactionId) {
-            alert("Invalid transaction ID.");
+            $(button).closest('tr').remove();
             return;
         }
 
