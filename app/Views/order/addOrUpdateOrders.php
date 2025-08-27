@@ -51,6 +51,8 @@
                     </div>
                 </div>
 
+
+
                 <div class="col-lg-3">
                     <label for="" class="p-0 m-0">Select Invoice Format</label>
                     <div class="input-group mb-2">
@@ -58,6 +60,15 @@
                             <option value="">Select Invoice Format</option>
                         </select>
                     </div>
+                </div>
+
+
+                <div class="col-lg-4">
+                    <label for="">GST Type</label>
+                    <select name="gst_type" >
+                        <option value="With GST" <?= (isset($data['gst_type']) && $data['gst_type'] == "With GST") ? 'selected' : '' ?>>With GST</option>
+                        <option value="Without GST" <?= (isset($data['gst_type']) && $data['gst_type'] == "Without GST") ? 'selected' : '' ?>>Without GST</option>
+                    </select>
                 </div>
 
                 <div style="overflow-x: auto; width: 100%;">

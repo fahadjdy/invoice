@@ -213,6 +213,7 @@ class Order extends BaseController
         $name = $this->request->getPost('name');
         $partyId = $this->request->getPost('party_id');
         $ref_id = $this->request->getPost('ref_id');
+        $gst_type = $this->request->getPost('gst_type');
         $invoiceId = $this->request->getPost('invoice_id') ?? 1;
         $status = $this->request->getPost('status');
 
@@ -223,6 +224,7 @@ class Order extends BaseController
             'name'          => $name,
             'party_id'      => $partyId,
             'ref_id'        => $ref_id,
+            'gst_type'        => $gst_type,
             'invoice_id'    => (!empty($invoiceId)) ? $invoiceId : 1,
             'status'        => $status
         ];
