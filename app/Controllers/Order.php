@@ -103,7 +103,8 @@ class Order extends BaseController
     
     public function getPartyNameList(){
         $PartyModel = new PartyModel();
-        $parties = $PartyModel->select('party.name as party_name , party_id')->findAll();
+        $parties = $PartyModel->select('party.name as party_name , party_id')
+                    ->where('is_deleted',0)->findAll();
         $data = [];
         foreach ($parties as $party) {
             $data[] = [
