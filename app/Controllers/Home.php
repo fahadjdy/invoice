@@ -42,8 +42,7 @@ class Home extends BaseController
         $from = date("Y-m-d H:i:s", 0);
         $to = date("Y-m-d H:i:s");
         $TransactionModel = new TransactionModel();
-        $data['party_transactions'] = $TransactionModel->sumTotalPrice(NULL, NULL, $from, $to);
-        // p($data['party_transactions']);
+        $data['party_transactions'] = inrFormat($TransactionModel->sumTotalPrice(NULL, NULL, $from, $to));
         
         $data['ref_transactions'] = $TransactionModel->sumTotalPrice('ref_id !=', 0, $from, $to);
         
@@ -63,7 +62,7 @@ class Home extends BaseController
         $TransactionModel = new TransactionModel();
         $party_transactions = $TransactionModel->sumTotalPrice($column, $value, $from, $to);
         // dd($party_transactions , $TransactionModel->db->getLastQuery());
-        echo json_encode($party_transactions);
+        echo json_encode(inrFormat($party_transactions)); // json_encode($party_transactions);
         exit;
     }
 

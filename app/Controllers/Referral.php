@@ -45,6 +45,7 @@ class Referral extends BaseController
         $result = $query->get()->getResultArray();
             foreach ($result as $key => $val) {
                 $result[$key]['created_at'] = dateFormat($val['created_at']);
+                $result[$key]['total_amount'] = inrFormat($val['total_amount']);
             }
 
         $data['data'] = $result;
