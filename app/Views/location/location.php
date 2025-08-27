@@ -13,6 +13,7 @@
                 id="Location_table">
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Location Name</th>
                         <th>Created Date</th>
                         <th>Updated Date</th>
@@ -48,7 +49,9 @@ $(document).ready(function () {
             url: 'getLocationListAjax', // json datasource
             type: "post"
         },
+         order: [[0, 'desc']],
         columns: [
+            { data: "location_id"},
             { data: "name" },
             { data: "created_at" },
             { data: "updated_at" },

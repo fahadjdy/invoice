@@ -61,7 +61,7 @@ class Location extends BaseController
     public function getLocationListAjax()
     {
         $LocationModel = new LocationModel();
-        $result = $LocationModel->findAll();
+        $result = $LocationModel->where('is_deleted','0')->orderBy('location_id','DESC')->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 
@@ -102,18 +102,21 @@ class Location extends BaseController
 
     public function deleteLocation()
     {
-
         $location_id = $this->request->getPost('location_id');
         $LocationModel = new LocationModel();
 
-        $status = $LocationModel->set('status', 0)->where('location_id', $location_id)->update();
+        $status = $LocationModel
+            ->set('is_deleted', 1)
+            ->set('deleted_at', date('Y-m-d H:i:s'))
+            ->where('location_id', $location_id)
+            ->update();
 
-        if ($status)
+        if ($status) {
             echo json_encode(['msg' => 'Location Deleted Successfully..!', 'status' => true]);
-        else
+        } else {
             echo json_encode(['msg' => 'Something went wrong..!', 'status' => false]);
+        }
     }
-
 
     public function addOrUpdateLocation($location_id = 0)
     {

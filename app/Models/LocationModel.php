@@ -13,7 +13,7 @@ class LocationModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'location_id','name', 'code', 'created_at','updated_at','status'
+        'location_id','name', 'code','is_deleted', 'created_at','updated_at','status','deleted_at'
     ];
 
     protected bool $allowEmptyInserts = false;

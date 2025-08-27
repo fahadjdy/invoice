@@ -22,13 +22,13 @@
 -> Export add PDF,CSV option
 -> Share whatsapp option  -->
 
-# product 
+<!-- # product 
 -> soft delete option
 -> in product add, add field product price (per/sqft)
 -> in listing (Sr.no., Product Name, Price (per/sqft), created at, status)
 -> remove product code from DB and form
 -> order by descending
--> soft delete option (make sure deleted product shoould not display at listing , add product, edit product )
+-> soft delete option (make sure deleted product shoould not display at listing , add product, edit product ) -->
 
 
 # order 

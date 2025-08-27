@@ -49,6 +49,7 @@ $(document).ready(function () {
             url: 'getProductListAjax', // json datasource
             type: "post"
         },
+        order: [[2, 'desc']],
         columns: [
             { data: "name" },
             { data: "price" },
