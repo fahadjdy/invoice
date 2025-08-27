@@ -15,7 +15,6 @@ $routes->post('/authLogin', 'Auth::authLogin');
 $routes->get('/dashboard', 'Home::index',['filter' => 'authFilter']);
 // $routes->get('/partyFilter/(:any)', 'Home::partyFilter/$1',['filter' => 'authFilter']);
 $routes->get('/partyFilter/(:any)/(:any)/(:any)', 'Home::partyFilter/$1/$2/$3',['filter' => 'authFilter']);
-$routes->get('/refFilter/(:any)/(:any)/(:any)', 'Home::refFilter/$1/$2/$3',['filter' => 'authFilter']);
 
 
 // party routes

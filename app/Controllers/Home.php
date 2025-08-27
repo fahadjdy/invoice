@@ -47,15 +47,6 @@ class Home extends BaseController
         
         $data['ref_transactions'] = $TransactionModel->sumTotalPrice('ref_id !=', 0, $from, $to);
         
-        $OrdersModel = new OrdersModel();
-        $data['latest_orders'] = $OrdersModel
-                                        ->select('orders.name as orders_name,party.name as party_name, SUM(transaction.total_price) as total_price')
-                                        ->join('party','party.party_id = orders.party_id')
-                                        ->join('transaction','transaction.transaction_id = orders.orders_id')
-                                        ->groupBy('orders.orders_id')
-                                        ->orderBy('orders.orders_id','DESC')
-                                        ->limit(5)->findAll();
-        // dd($data['latest_orders']);
         $data['pageTitle'] = 'Dashboard';
         return view('index', $data);
     }
@@ -73,20 +64,6 @@ class Home extends BaseController
         $party_transactions = $TransactionModel->sumTotalPrice($column, $value, $from, $to);
         // dd($party_transactions , $TransactionModel->db->getLastQuery());
         echo json_encode($party_transactions);
-        exit;
-    }
-    
-    public function refFilter($ref_id = NULL, $from = NULL, $to = NULL)
-    {
-        // p($ref_id);
-        $column = ($ref_id != NULL && $ref_id != 0) ? 'ref_id' :  'ref_id !=';
-        $value = ($ref_id != NULL && $ref_id != 0) ? $ref_id :  0;
-        $from = empty($from) ? date('Y-m-d H:i:s', 0) : date('Y-m-d H:i:s', strtotime($from));
-        $to = empty($to) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($to));
-        $TransactionModel = new TransactionModel();
-        $ref_transactions = $TransactionModel->sumTotalPrice($column, $value, $from, $to);
-        // dd($ref_transactions, $TransactionModel->db->getLastQuery());
-        echo json_encode($ref_transactions);
         exit;
     }
 
