@@ -13,7 +13,7 @@ class FrameImageModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'frame_image_id', 'url', 'name', 'status', 'created_at', 'updated_at'
+        'frame_image_id', 'url', 'name', 'status', 'is_deleted', 'created_at', 'updated_at' , 'deleted_at'
     ];
 
     protected bool $allowEmptyInserts = false;

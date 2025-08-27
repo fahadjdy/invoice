@@ -49,6 +49,7 @@ $(document).ready(function () {
             url: location.origin + '/getFrameImageListAjax', // json datasource
             type: "post"
         },
+         order: [[3, 'desc']],
         columns: [
             { 
                 data: "url",
@@ -69,7 +70,7 @@ $(document).ready(function () {
             { responsivePriority: 10001, targets: 2 },
             { responsivePriority: 2, targets: -1 }
         ],
-        stateSave: true,
+        // stateSave: true,
     });
 
       //   ===== for delete user ========== 

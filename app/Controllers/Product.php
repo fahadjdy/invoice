@@ -150,7 +150,7 @@ class Product extends BaseController
     public function getFrameImageListAjax()
     {
         $FrameImageModel = new FrameImageModel();
-        $result = $FrameImageModel->findAll();
+        $result = $FrameImageModel->where('is_deleted',0)->orderBY('created_at','DESC')->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 
@@ -196,7 +196,10 @@ class Product extends BaseController
         $frame_image_id = $this->request->getPost('frame_image_id');
         $FrameImageModel = new FrameImageModel();
 
-        $status = $FrameImageModel->where('frame_image_id', $frame_image_id)->delete();
+        $status = $FrameImageModel ->set('is_deleted', 1)           
+                                ->set('deleted_at', date('Y-m-d H:i:s')) 
+                                ->where('frame_image_id',$frame_image_id)
+                                ->update();
 
         if ($status)
             echo json_encode(['msg' => 'Product Deleted Successfully..!', 'status' => true]);

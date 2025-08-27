@@ -132,7 +132,7 @@ class Order extends BaseController
     public function getLocationList(){
 
         $LocationModel = new LocationModel();
-        $locations = $LocationModel->select('location.name as location_name , location_id')->findAll();
+        $locations = $LocationModel->select('location.name as location_name , location_id')->where('is_deleted', 0)->findAll();
 
         $data = [];
         foreach ($locations as $location) {
@@ -148,7 +148,9 @@ class Order extends BaseController
     public function getFrameImageList(){
 
         $FrameImageModel = new FrameImageModel();
-        $FrameImages = $FrameImageModel->select('frame_image.name as frame_image_name , frame_image_id')->findAll();
+        $FrameImages = $FrameImageModel->select('frame_image.name as frame_image_name , frame_image_id')
+        ->where('is_deleted',0)
+        ->findAll();
 
         $data = [];
         foreach ($FrameImages as $frame_image) {
@@ -163,7 +165,8 @@ class Order extends BaseController
     public function getProductList(){
 
         $ProductModel = new ProductModel();
-        $products = $ProductModel->select('product.name as product_name , product_id')->findAll();
+        $products = $ProductModel->select('product.name as product_name , product_id')
+                                    ->where('is_deleted', 0)->findAll();
 
         $data = [];
         foreach ($products as $product) {
