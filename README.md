@@ -15,12 +15,12 @@
 -> order by decending
 -> check delete is working or not(soft delte)
 
-# Reffral 
+<!-- # Reffral 
 -> At listing ad column (Sr.no., Refferal Name, Party Name, Order id, Amount)
 -> Advance filter show hide column option.
 -> Refferal Name field should selection box like datatable(refferal party selection) 
 -> Export add PDF,CSV option
--> Share whatsapp option 
+-> Share whatsapp option  -->
 
 # product 
 -> soft delete option

@@ -13,10 +13,11 @@
                 id="UserManagement_table">
                 <thead>
                     <tr>
-                        <th>User Name</th>
-                        <th>Email</th>
+                        <th>Sr.No</th>
+                        <th>Party Name</th>
                         <th>Address</th>
                         <th>Status</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -45,14 +46,21 @@ $(document).ready(function () {
         serverSide: false,
         processing: false,
         ajax: {
-            url: 'getPartyListAjax', // json datasource
+            url: 'getPartyListAjax',
             type: "post"
         },
         columns: [
+            { 
+                data: null, 
+                render: function (data, type, row, meta) {
+                    return meta.row + 1; 
+                },
+                className: "text-center"
+            },
             { data: "name" },
-            { data: "email" },
             { data: "address" },
             { data: "status" },
+            { data: "created_at" },
             { data: "action" }
         ],
         responsive: true,
@@ -61,7 +69,7 @@ $(document).ready(function () {
             { responsivePriority: 10001, targets: 2 },
             { responsivePriority: 2, targets: -1 }
         ],
-        stateSave: true,
+        // stateSave: true,
     });
 
       //   ===== for delete user ========== 
@@ -78,11 +86,11 @@ $(document).ready(function () {
             }).then(function (t) {
                 t.value && $.ajax({
                     type: "post",
-                    url: "deleteParty",
+                    url: location.origin + "/deleteParty",
                     data: { party_id: party_id },
                     dataType: "JSON",
                     success: function (response) {
-                        if (response.status) {
+                        if (response.is_deleted) {
                             Swal.fire("Deleted!", response.msg, "success");
                             table.ajax.reload();
                         } else {

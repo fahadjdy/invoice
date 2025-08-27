@@ -10,7 +10,6 @@
         <form id="PartyForm" method="post">
             <div class="row">
 
-
                 <div class="col-lg-4">
                     <label for="" class="p-0 m-0">Party Name</label>
                     <?= (isset($edit) ? '<input type="hidden" name="party_id" value="' . $edit . '">' : '') ?>

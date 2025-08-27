@@ -21,7 +21,7 @@ class TransactionModel extends Model
 
     protected array $casts = [];
     protected array $castHandlers = [];
-
+    
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';

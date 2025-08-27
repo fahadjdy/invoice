@@ -59,7 +59,7 @@ class Party extends BaseController
     public function getPartyListAjax()
     {
         $PartyModel = new PartyModel();
-        $result = $PartyModel->orderBy('party_id','DESC')->findAll();
+        $result = $PartyModel->orderBy('party_id','DESC')->where('is_deleted','0')->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 
@@ -87,6 +87,8 @@ class Party extends BaseController
                     $row['status'] = 'Deactive';
                 }
 
+                $row['created_at'] = dateFormat($row['created_at']);
+
 
                 $row['action'] = $action;
                 $data['data'][] = $row;
@@ -104,12 +106,14 @@ class Party extends BaseController
         $party_id = $this->request->getPost('party_id');
         $PartyModel = new PartyModel();
 
-        $status = $PartyModel->set('status', 0)->where('party_id', $party_id)->update();
+        $is_deleted =   $PartyModel->set('is_deleted', 1)
+                                    ->set('deleted_at', date('Y-m-d H:i:s'))
+                                    ->where('party_id', $party_id)->update();
 
-        if ($status)
-            echo json_encode(['msg' => 'Party Deleted Successfully..!', 'status' => true]);
+        if ($is_deleted)
+            echo json_encode(['msg' => 'Party Deleted Successfully..!', 'is_deleted' => true]);
         else
-            echo json_encode(['msg' => 'Something went wrong..!', 'status' => false]);
+            echo json_encode(['msg' => 'Something went wrong..!', 'is_deleted' => false]);
     }
 
 
@@ -118,7 +122,7 @@ class Party extends BaseController
 
         if ($party_id != 0) {
             $PartyModel = new PartyModel();
-            $data['data'] = $PartyModel->where(['party_id' => $party_id])->first();
+            $data['data'] = $PartyModel->where(['party_id' => $party_id])->where('is_deleted','0')->first();
             if(empty($data['data'])){
                 return redirect()->to('addOrUpdateParty');
              }

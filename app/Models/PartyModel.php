@@ -13,7 +13,7 @@ class PartyModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'party_id', 'name', 'address', 'contact', 'email', 'status', 'created_at', 'updated_at'
+        'party_id', 'name', 'address', 'contact', 'email', 'status', 'is_deleted', 'created_at', 'updated_at','deleted_at'
     ];
 
     protected bool $allowEmptyInserts = false;

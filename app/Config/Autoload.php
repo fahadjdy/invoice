@@ -77,7 +77,9 @@ class Autoload extends AutoloadConfig
      *
      * @var list<string>
      */
-    public $files = [];
+    public $files = [
+        APPPATH . 'Helpers/CodeHelper.php',
+    ];
 
     /**
      * -------------------------------------------------------------------
@@ -91,6 +93,6 @@ class Autoload extends AutoloadConfig
      * @var list<string>
      */
     public $helpers = [
-        'form'
+        'form','code'
     ];
 }
