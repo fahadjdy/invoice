@@ -62,12 +62,11 @@ class Product extends BaseController
     public function getProductListAjax()
     {
         $ProductModel = new ProductModel();
-        $result = $ProductModel->findAll();
+        $result = $ProductModel->where('is_deleted','0')->orderBy('product_id','DESC')->findAll();
         $data['data'] = [];
         if (!empty($result)) {
 
             foreach ($result as $value) {
-
 
                 $action =  '<a href="' . base_url('addOrUpdateProduct/' . $value['product_id']) . '"><button   class="btn btn-light btn-sm waves-effect " ><i
             class="mdi mdi-square-edit-outline me-1"></i> Edit</button></a>';
@@ -101,18 +100,22 @@ class Product extends BaseController
     }
 
 
-    public function deleteProduct()
+   public function deleteProduct()
     {
-
         $product_id = $this->request->getPost('product_id');
         $ProductModel = new ProductModel();
 
-        $status = $ProductModel->set('status', 0)->where('product_id', $product_id)->update();
+        $status = $ProductModel
+            ->set('is_deleted', 1)           
+            ->set('deleted_at', date('Y-m-d H:i:s')) 
+            ->where('product_id', $product_id)
+            ->update();
 
-        if ($status)
+        if ($status) {
             echo json_encode(['msg' => 'Product Deleted Successfully..!', 'status' => true]);
-        else
+        } else {
             echo json_encode(['msg' => 'Something went wrong..!', 'status' => false]);
+        }
     }
 
 

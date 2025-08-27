@@ -10,10 +10,10 @@
 -> Overall Party Revenue By Party Name
 
 
-# Party
+<!-- # Party
 -> At party listing add column (Sr.no. , Party Name, Address , Status,Created At,Action)
 -> order by decending
--> check delete is working or not(soft delte)
+-> check delete is working or not(soft delte) -->
 
 <!-- # Reffral 
 -> At listing ad column (Sr.no., Refferal Name, Party Name, Order id, Amount)

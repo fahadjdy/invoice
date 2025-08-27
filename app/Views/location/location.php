@@ -78,7 +78,7 @@ $(document).ready(function () {
             }).then(function (t) {
                 t.value && $.ajax({
                     type: "post",
-                    url: "deleteLocation",
+                    url: location.origin + "/deleteLocation",
                     data: { location_id: location_id },
                     dataType: "JSON",
                     success: function (response) {

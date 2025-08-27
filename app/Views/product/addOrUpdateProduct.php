@@ -23,16 +23,16 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-lg-4">
-                    <label for="" class="p-0 m-0">Product code</label>
+                <div class="col-lg-4">
+                    <label for="" class="p-0 m-0">Price (per/sqft)</label>
                     <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                         </div>
-                        <input maxlength="50" autocomplete="off" type="text" id="code" name="code" class="form-control p-0 px-2"
-                            placeholder="Product code" required="" value="<?=(isset($data)) ? $data['code'] : ''?>">
+                        <input maxlength="50" autocomplete="off" type="text" id="price" name="price" class="form-control p-0 px-2"
+                            placeholder="Product price" required="" value="<?=(isset($data)) ? $data['price'] : ''?>">
                     </div>
-                </div> -->
+                </div>
 
                 <label for="" class="p-0 m-0"> Status</label>
                 <div class="input-group mb-3">

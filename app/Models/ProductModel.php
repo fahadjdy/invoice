@@ -13,7 +13,7 @@ class ProductModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'product_id','name', 'code', 'created_at','updated_at','status'
+        'product_id','name', 'price','status', 'is_deleted','created_at','updated_at', 'deleted_at'
     ];
 
     protected bool $allowEmptyInserts = false;

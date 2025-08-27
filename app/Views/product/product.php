@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <th>Product Name</th>
-                        <!-- <th>Product Code</th> -->
+                        <th>Price (per/sqft)</th>
                         <th>Created Date</th>
                         <th>Updated Date</th>
                         <th>Status</th>
@@ -51,18 +51,13 @@ $(document).ready(function () {
         },
         columns: [
             { data: "name" },
-            // { data: "code" },
+            { data: "price" },
             { data: "created_at" },
             { data: "updated_at" },
             { data: "status" },
             { data: "action" }
         ],
         responsive: true,
-        columnDefs: [
-            { responsivePriority: 1, targets: 0 },
-            { responsivePriority: 10001, targets: 2 },
-            { responsivePriority: 2, targets: -1 }
-        ],
         stateSave: true,
     });
 
