@@ -33,11 +33,11 @@
 
 # order 
 -> display only financial year record
--> At form Remove row is not working 
+<!-- -> At form Remove row is not working  -->
 -> Add kasar(Ghalkhad) option at form
 -> Add Extra charges option
 -> Sequence of sectioning of location, product should come what user selected.
--> Design issue , fix size and make it scrollable .
+<!-- -> Design issue , fix size and make it scrollable . -->
 -> in edit order data not display properly ( like selection, price remove field,)
 -> set price by entering the size of product in Add/Edit. 
 

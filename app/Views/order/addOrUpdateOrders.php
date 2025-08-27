@@ -282,8 +282,10 @@
 
         // Re-initialize Select2 for only the new elements in the row
         $(`.select2-frame`, `tr[data-row-index="${rowIndex}"]`).select2();
-        $(`.select2-location`, `tr[data-row-index="${rowIndex}"]`).select2();
-        $(`.select2-product`, `tr[data-row-index="${rowIndex}"]`).select2();
+        
+        $(`.select2-location`, `tr[data-row-index="${rowIndex}"]`).select2({allowClear: true});
+
+        $(`.select2-product`, `tr[data-row-index="${rowIndex}"]`).select2({allowClear: true});
 
         // Populate existing transaction data if provided
         if (transaction) {
