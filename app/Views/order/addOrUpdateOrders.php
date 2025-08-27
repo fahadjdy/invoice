@@ -64,14 +64,14 @@
                 <table width="100%" class="table">
                     <thead>
                         <tr>
-                            <td style="width:100px">Sr.No.</td>
-                            <td style="width:200px">Frame Image</td>
-                            <td style="width:250px">Location</td>
-                            <td style="width:400px">Product</td>
-                            <td style="width:100px">Extra Product</td>
-                            <td style="width:200px">Size <small>(in inch)</small></td>
-                            <td style="width:100px">Price</td>
-                            <td style="width:100px">Qty.</td>
+                            <td style="width:100px !important">Sr.No.</td>
+                            <td style="width:200px !important">Frame Image</td>
+                            <td style="width:250px !important">Location</td>
+                            <td style="width:400px !important">Product</td>
+                            <td style="width:100px !important">Extra Product</td>
+                            <td style="width:200px !important">Size <small>(in inch)</small></td>
+                            <td style="width:100px !important">Price</td>
+                            <td style="width:100px !important">Qty.</td>
                             <td>Actions</td>
                         </tr>
                     </thead>
@@ -251,7 +251,7 @@
                             </select>
                         </td>
                         <td width="400px">
-                            <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product">
+                            <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product" style="width:200px">
                                 ${productOptions}
                             </select>
                         </td>
@@ -261,16 +261,16 @@
                         <td width="350px" class="size-price-qty-container-${rowIndex}">
                             <div class="location-fields">
                                 <span class="d-flex" style="width:200px">
-                                    <input type="number" style="width:auto" name="size1[${rowIndex}][]" class="form-control"> *
-                                    <input type="number" style="width:auto" name="size2[${rowIndex}][]" class="form-control">
+                                    <input type="number" style="width:100px" name="size1[${rowIndex}][]" class="form-control"> *
+                                    <input type="number" style="width:100px" name="size2[${rowIndex}][]" class="form-control">
                                 </span>
                             </div>
                         </td>
                         <td width="100px" class="price-container-${rowIndex}">
-                            <input type="number" name="price[${rowIndex}][]" class="form-control">
+                            <input type="number" style="width:auto" name="price[${rowIndex}][]" class="form-control">
                         </td>
                         <td width="100px" class="qty-container-${rowIndex}">
-                            <input type="number" name="qty[${rowIndex}][]" value="1" class="form-control">
+                            <input type="number" style="width:auto" name="qty[${rowIndex}][]" value="1" class="form-control">
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger removeButton" onclick="removeRow(this, ${transactionId});">Remove</button>
@@ -472,5 +472,11 @@
     }
 </script>
 
+<style>
+    .select2-container--default.select2-container--focus .select2-selection--multiple
+    {
+        width:300px !important
+    }
+</style>
 <?= $this->endSection('js') ?>
 
