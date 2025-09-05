@@ -470,6 +470,55 @@
                 submitForm();
             }
         });
+
+
+        // Trigger price calculation when size1 or size2 changes
+        $(document).on('input', 'input[name^="size1"], input[name^="size2"]', function() {
+    const $sizeInput = $(this);
+    const $row = $sizeInput.closest('tr');
+    const rowIndex = $row.data('row-index');
+
+    // Get the container of this product’s size fields
+    const $sizeFieldContainer = $sizeInput.closest('.product-fields');
+    const productIndex = $sizeFieldContainer.index(); // position in the row
+
+    // Get the corresponding price input
+    const $priceContainer = $(`.price-container-${rowIndex}`);
+    const $priceInput = $priceContainer.find('input[name^="price"]').eq(productIndex);
+
+    const size1 = parseFloat($sizeFieldContainer.find('input[name^="size1"]').val()) || 0;
+    const size2 = parseFloat($sizeFieldContainer.find('input[name^="size2"]').val()) || 0;
+
+    if (size1 > 0 && size2 > 0) {
+        // Calculate area in sqft
+        const sqft = (size1 * size2) / 144;
+
+        // Get the multi-select for this row
+        const $productSelect = $(`select[name="product_id[${rowIndex}][]"]`);
+        const selectedProductIds = $productSelect.val() || [];
+
+        // Get product ID corresponding to this product field
+        const productId = selectedProductIds[productIndex];
+
+        // Fetch price per sqft from the option’s data-price
+        const pricePerSqft = parseFloat($productSelect.find(`option[value="${productId}"]`).data('price')) || 0;
+
+        // Calculate total price
+        const totalPrice = (sqft * pricePerSqft).toFixed(2);
+
+        // Update only this product’s price input
+        $priceInput.val(totalPrice);
+    } else {
+        $priceInput.val('');
+    }
+});
+
+
+
+
+
+
+
     });
 
     function submitForm() {

@@ -166,14 +166,15 @@ class Order extends BaseController
     public function getProductList(){
 
         $ProductModel = new ProductModel();
-        $products = $ProductModel->select('product.name as product_name , product_id')
+        $products = $ProductModel->select('product.name as product_name , product_id, price')
                                     ->where('is_deleted', 0)->findAll();
 
         $data = [];
         foreach ($products as $product) {
             $data[] = [
                 'product_id' => $product['product_id'],
-                'product_name' => $product['product_name']
+                'product_name' => $product['product_name'],
+                'price' => $product['price']
             ];
         }
 
