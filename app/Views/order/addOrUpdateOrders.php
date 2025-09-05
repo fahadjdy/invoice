@@ -257,12 +257,12 @@
                             </select>
                         </td>
                         <td width="350px">
-                            <select multiple="multiple" name="location_id[${rowIndex}][]" class="form-control location-select select2-location" onchange="updateSizePriceQty(this, ${rowIndex})">
+                            <select multiple="multiple" name="location_id[${rowIndex}][]" class="form-control location-select select2-location" >
                                 ${locationOptions}
                             </select>
                         </td>
                         <td width="400px">
-                            <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product" style="width:200px">
+                            <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product" style="width:200px" onchange="updateSizePriceQty(this, ${rowIndex})">
                                 ${productOptions}
                             </select>
                         </td>
@@ -329,89 +329,95 @@
     //     });
     // }
 
-    async function populateRowData(rowIndex, transaction) {
+     async function populateRowData(rowIndex, transaction) {
         const row = $(`tr[data-row-index="${rowIndex}"]`);
-        
+
         // Store original data
         const originalData = {
+            productIds: transaction.product_id ? transaction.product_id.split(',') : [],
             sizes1: transaction.size1 ? transaction.size1.split(',') : [],
             sizes2: transaction.size2 ? transaction.size2.split(',') : [],
             prices: transaction.price ? transaction.price.split(',') : [],
             quantities: transaction.qty ? transaction.qty.split(',') : [],
-            locationIds: transaction.location_id ? transaction.location_id.split(',') : []
         };
+
         row.data('originalData', originalData);
-        
+
         // Set frame image
         row.find('select[name="frame_image_id[]"]').val(transaction.frame_image_id);
-        
-        // Set locations
-        const locationSelect = row.find(`select[name="location_id[${rowIndex}][]"]`);
-        locationSelect.val(originalData.locationIds).trigger('change');
-        
-        // Set products
-        if (transaction.product_id) {
-            const productIds = transaction.product_id.split(',');
-            row.find(`select[name="product_id[${rowIndex}][]"]`).val(productIds).trigger('change');
-        }
-        
+
+        // Set products (multi-select)
+        const productSelect = row.find(`select[name="product_id[${rowIndex}][]"]`);
+        productSelect.val(originalData.productIds).trigger('change');
+
         // Set extra product
         row.find('textarea[name="extra_product[]"]').val(transaction.extra_product || '');
 
         // Force update of size/price/qty fields
-        await new Promise(resolve => setTimeout(resolve, 200));
-        updateSizePriceQty(locationSelect[0], rowIndex, originalData);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        updateSizePriceQty(productSelect[0], rowIndex);
     }
 
-    function updateSizePriceQty(selectElement, rowIndex, originalData = null) {
-        const selectedLocations = $(selectElement).val() || [];
-        const row = $(selectElement).closest('tr');
-        originalData = originalData || row.data('originalData') || {};
-        
-        const sizeContainer = $(`.size-price-qty-container-${rowIndex}`);
-        const priceContainer = $(`.price-container-${rowIndex}`);
-        const qtyContainer = $(`.qty-container-${rowIndex}`);
+   function updateSizePriceQty(selectElement, rowIndex) {
+    const selectedProducts = $(selectElement).val() || [];
+    const row = $(selectElement).closest('tr');
+    const originalData = row.data('originalData') || {};
 
-        // Clear containers
-        sizeContainer.empty();
-        priceContainer.empty();
-        qtyContainer.empty();
+    const sizeContainer = $(`.size-price-qty-container-${rowIndex}`);
+    const priceContainer = $(`.price-container-${rowIndex}`);
+    const qtyContainer = $(`.qty-container-${rowIndex}`);
 
-        selectedLocations.forEach((locationId, index) => {
-            const locationName = $(`option[value="${locationId}"]`, selectElement).text();
-            const originalIndex = originalData.locationIds ? 
-                                originalData.locationIds.indexOf(locationId) : -1;
+    // Show containers in case they were hidden
+    sizeContainer.show();
+    priceContainer.show();
+    qtyContainer.show();
 
-            const size1Value = originalIndex > -1 ? originalData.sizes1[originalIndex] : '';
-            const size2Value = originalIndex > -1 ? originalData.sizes2[originalIndex] : '';
-            const priceValue = originalIndex > -1 ? originalData.prices[originalIndex] : '';
-            const qtyValue = originalIndex > -1 ? originalData.quantities[originalIndex] : '';
+    // Clear previous fields
+    sizeContainer.empty();
+    priceContainer.empty();
+    qtyContainer.empty();
 
-            sizeContainer.append(`
-                <div class="location-fields">
-                    <small>${locationName}</small>
-                    <span class="d-flex" style="width:200px">
-                        <input type="number" name="size1[${rowIndex}][]" class="form-control" value="${size1Value}">*
-                        <input type="number" name="size2[${rowIndex}][]" class="form-control" value="${size2Value}">
-                    </span>
-                </div>
-            `);
+    selectedProducts.forEach((productId, index) => {
+        const productName = $(`option[value="${productId}"]`, selectElement).text();
 
-            priceContainer.append(`
-                <div class="location-fields" style="width:100px">
-                    <small>${locationName}</small>
-                    <input type="number" name="price[${rowIndex}][]" class="form-control" value="${priceValue}">
-                </div>
-            `);
+        // Use originalData if exists, else empty for Add Mode
+        const size1Value = (originalData.sizes1 && originalData.sizes1[index]) || '';
+        const size2Value = (originalData.sizes2 && originalData.sizes2[index]) || '';
+        const priceValue = (originalData.prices && originalData.prices[index]) || '';
+        const qtyValue = (originalData.quantities && originalData.quantities[index]) || '';
 
-            qtyContainer.append(`
-                <div class="location-fields"  style="width:100px">
-                    <small>${locationName}</small>
-                    <input type="number" name="qty[${rowIndex}][]" class="form-control" value="${qtyValue}">
-                </div>
-            `);
-        });
-    }
+        sizeContainer.append(`
+            <div class="product-fields">
+                <small>${productName}</small>
+                <span class="d-flex" style="width:200px">
+                    <input type="number" name="size1[${rowIndex}][]" class="form-control" value="${size1Value}">
+                    <input type="number" name="size2[${rowIndex}][]" class="form-control" value="${size2Value}">
+                </span>
+            </div>
+        `);
+
+        priceContainer.append(`
+            <div class="product-fields" style="width:100px">
+                <small>${productName}</small>
+                <input type="number" name="price[${rowIndex}][]" class="form-control" value="${priceValue}">
+            </div>
+        `);
+
+        qtyContainer.append(`
+            <div class="product-fields" style="width:100px">
+                <small>${productName}</small>
+                <input type="number" name="qty[${rowIndex}][]" class="form-control" value="${qtyValue}">
+            </div>
+        `);
+    });
+}
+
+
+    // Optional: call this whenever the product multi-select changes
+    $(document).on('change', 'select[name^="product_id"]', function() {
+        const rowIndex = $(this).closest('tr').data('row-index');
+        updateSizePriceQty(this, rowIndex);
+    });
 
     function removeRow(button, transactionId) {
         if (!transactionId) {
