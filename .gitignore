@@ -85,7 +85,7 @@ tests/coverage*
 # Composer
 #-------------------------
 # vendor/
-
+public/assets/images
 #-------------------------
 # IDE / Development Files
 #-------------------------
