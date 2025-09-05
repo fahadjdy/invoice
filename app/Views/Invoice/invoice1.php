@@ -1,10 +1,11 @@
 <?php 
 // Function to calculate square footage (in square feet)
 function calculateSquareFootage($lengthInInches, $widthInInches) {
-    if(!is_numeric($lengthInInches) || !is_numeric($widthInInches)){
-        return 0;
-    }
-    return ($lengthInInches * $widthInInches) / 144;
+    
+    $lengthInInches = (double)$lengthInInches;
+    $widthInInches = (double)$widthInInches;
+    $sqft = ($lengthInInches * $widthInInches) / 144;
+    return $sqft;
 }
 
 $deafaultColSpan = 6;
@@ -15,6 +16,8 @@ $is_image = !empty($headers['image']);
 
 $datetime = $orders['created_at'] ?? time();
 $date = date('d-m-Y', strtotime($datetime));
+
+$gst_type = $orders['gst_type'] ?? 'Without GST';
 ?>
 
 <!DOCTYPE html>
@@ -209,6 +212,35 @@ $date = date('d-m-Y', strtotime($datetime));
                     <td class="text-right" style="font-weight: bold;"><?=$totalQty?></td>
                     <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum, 2)?></td>
                 </tr>
+
+                <!-- if with gst  -->
+                 <?php if($gst_type == "With GST") : ?>
+                <tr style="border-top:1px solid gray !important;">
+                    <td colspan = "3" ></td>
+                    <td class="text-right" ></td>
+                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
+                    <td colspan = "0" ></td>
+                    <td class="text-right" style="font-weight: bold;">CGST (9%)</td>
+                    <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum*9/100,2)?></td>
+                </tr>
+                <tr style="border-top:1px solid gray !important;">
+                    <td colspan = "3" ></td>
+                    <td class="text-right" ></td>
+                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
+                    <td colspan = "0" ></td>
+                    <td class="text-right" style="font-weight: bold;">SGST (9%)</td>
+                    <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum*9/100,2)?></td>
+                </tr>
+                <tr style="border-top:1px solid gray !important;">
+                    <td colspan = "3" ></td>
+                    <td class="text-right" ></td>
+                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
+                    <td colspan = "0" ></td>
+                    <td class="text-right" style="font-weight: bold;">Total With GST</td>
+                    <td class="text-right" style="font-weight: bold;"><?=number_format(($totalSum*18/100)+$totalSum,2)?></td>
+                </tr>
+                <?php endif; ?>
+
             </tbody>
         </table>
     </div>

@@ -278,17 +278,10 @@ class Order extends BaseController
             
                 $sqft = implode(',', $sqftArray); // Store all sqft values as a comma-separated string
             
-                // p($sqft);
-                // Correct total price calculation: price * sqft * qty
                 $totalPrice = array_sum(array_map(function($price, $sqft, $qty) {
-                    // p($sqft);
-                    // Check if any value is zero before performing multiplication
-                    if (round($sqft,2) == 0) {
-                        return (int)$price *  (int)$qty; // Return 0 if any of the values is zero
-                    }
-                    return $price * round($sqft,2) * $qty; // Perform multiplication if none are zero
+                    return $price *  $qty; // Perform multiplication if none are zero
                 }, $prices[$index], $sqftArray, $qtys[$index]));
-                // p($totalPrice);
+                
             }
             
             

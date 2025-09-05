@@ -51,7 +51,10 @@ class TransactionModel extends Model
     // }
     
     public function sumTotalPrice($column, $value, $from, $to) {
-        $data = $this->select('SUM(total_price) as total_price')->join('orders o','o.orders_id = transaction.orders_id');
+        $data = $this->select("SUM( CASE 
+                    WHEN o.gst_type = 'With GST' THEN total_price * 1.18
+                    ELSE total_price
+                END) as total_price")->join('orders o','o.orders_id = transaction.orders_id');
         if( $column !== NULL)
         {
             $data->where('o.'.$column, $value);
