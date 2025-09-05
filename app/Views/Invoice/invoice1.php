@@ -18,6 +18,13 @@ $datetime = $orders['created_at'] ?? time();
 $date = date('d-m-Y', strtotime($datetime));
 
 $gst_type = $orders['gst_type'] ?? 'Without GST';
+
+$skip = 3;
+if($orders['invoice_id'] == 2 || $orders['invoice_id'] == 4){
+    $skip = 4;
+}else if($orders['invoice_id'] == 3){
+    $skip = 5;
+}
 ?>
 
 <!DOCTYPE html>
@@ -108,6 +115,7 @@ $gst_type = $orders['gst_type'] ?? 'Without GST';
     </style>
 </head>
 
+<!-- <body> -->
 <body onload="window.print()">
     <div style="font-weight: bold; height: 150px; border: 1px solid gray; border-bottom: unset;">
         <p style="color: gray; font-style: italic; text-align: right; font-weight: normal; font-size: 13px; margin: 5px 5px 0px 0px;">Original Copy</p>
@@ -205,9 +213,8 @@ $gst_type = $orders['gst_type'] ?? 'Without GST';
                 <?php } ?>
 
                 <tr>
-                    <td colspan = "3" ></td>
+                    <td colspan = "<?=$skip?>" ></td>
                     <td class="text-right" style="font-weight: bold;"><?=$totalSqft?></td>
-                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
                     <td colspan = "0" ></td>
                     <td class="text-right" style="font-weight: bold;"><?=$totalQty?></td>
                     <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum, 2)?></td>
@@ -216,15 +223,14 @@ $gst_type = $orders['gst_type'] ?? 'Without GST';
                 <!-- if with gst  -->
                  <?php if($gst_type == "With GST") : ?>
                 <tr style="border-top:1px solid gray !important;">
-                    <td colspan = "3" ></td>
+                    <td colspan = "<?=$skip?>" ></td>
                     <td class="text-right" ></td>
-                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
                     <td colspan = "0" ></td>
                     <td class="text-right" style="font-weight: bold;">CGST (9%)</td>
                     <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum*9/100,2)?></td>
                 </tr>
                 <tr style="border-top:1px solid gray !important;">
-                    <td colspan = "3" ></td>
+                    <td colspan = "<?=$skip?>" ></td>
                     <td class="text-right" ></td>
                     <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
                     <td colspan = "0" ></td>
@@ -232,7 +238,7 @@ $gst_type = $orders['gst_type'] ?? 'Without GST';
                     <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum*9/100,2)?></td>
                 </tr>
                 <tr style="border-top:1px solid gray !important;">
-                    <td colspan = "3" ></td>
+                    <td colspan = "<?=$skip?>" ></td>
                     <td class="text-right" ></td>
                     <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
                     <td colspan = "0" ></td>

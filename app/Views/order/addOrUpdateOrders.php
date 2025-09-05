@@ -298,6 +298,20 @@
 
         $(`.select2-product`, `tr[data-row-index="${rowIndex}"]`).select2({allowClear: true});
 
+
+        $('.select2-product').on('select2:select', function (e) {
+            let element = e.params.data.element;
+            let $element = $(element);
+
+            // Move the selected option to the end
+            $element.detach();
+            $(this).append($element);
+
+            // Refresh Select2
+            $(this).trigger("change");
+        });
+
+
         // Populate existing transaction data if provided
         if (transaction) {
             populateRowData(rowIndex, transaction);
@@ -334,6 +348,7 @@
 
         // Store original data
         const originalData = {
+            locationIds: transaction.location_id ? transaction.location_id.split(',') : [],
             productIds: transaction.product_id ? transaction.product_id.split(',') : [],
             sizes1: transaction.size1 ? transaction.size1.split(',') : [],
             sizes2: transaction.size2 ? transaction.size2.split(',') : [],
@@ -349,6 +364,9 @@
         // Set products (multi-select)
         const productSelect = row.find(`select[name="product_id[${rowIndex}][]"]`);
         productSelect.val(originalData.productIds).trigger('change');
+
+          const locationSelect = row.find(`select[name="location_id[${rowIndex}][]"]`);
+        locationSelect.val(originalData.locationIds).trigger('change');
 
         // Set extra product
         row.find('textarea[name="extra_product[]"]').val(transaction.extra_product || '');

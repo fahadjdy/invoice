@@ -251,8 +251,8 @@ class Order extends BaseController
         // Initialize array to store multiple transaction data
         $transactionDataArray = [];
         $qtys = array_values($qtys);
-        // var_dump($qtys);die();
         $locations = array_values($locations);
+        // p($locations);die();
         $products = array_values($products);
         $sizes1 = array_values($sizes1);
         $sizes2 = array_values($sizes2);
@@ -260,6 +260,7 @@ class Order extends BaseController
         // p($qtys);
         // Loop through each frame image ID
         foreach ($qtys as $index => $qty) {
+            
             // $idx = $index + 1;
             // Skip if no location/product data exists for this index
             // if (!isset($locations[$index]) || !isset($products[$index])) {
