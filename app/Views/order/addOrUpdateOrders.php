@@ -66,9 +66,14 @@
                 <div class="col-lg-4">
                     <label for="">GST Type</label>
                     <select name="gst_type" >
-                        <option value="With GST" <?= (isset($data['gst_type']) && $data['gst_type'] == "With GST") ? 'selected' : '' ?>>With GST</option>
-                        <option value="Without GST" <?= (isset($data['gst_type']) && $data['gst_type'] == "Without GST") ? 'selected' : '' ?>>Without GST</option>
+                          <option value="Without GST" <?= (isset($data['gst_type']) && $data['gst_type'] == "Without GST") ? 'selected' : '' ?>>Without GST</option>
+                        <option value="With GST" <?= (isset($data['gst_type']) && $data['gst_type'] == "With GST") ? 'selected' : '' ?>>With GST</option>                      
                     </select>
+                </div>
+
+                <div class="col-lg-4">
+                    <label for="">Discount (kasar)</label>
+                    <input type="number" name="discount" class="form-control" value="<?= (isset($data['discount'])) ? $data['discount'] : '0' ?>" >
                 </div>
 
                 <div style="overflow-x: auto; width: 100%;">
@@ -79,7 +84,7 @@
                             <td style="width:200px !important">Frame Image</td>
                             <td style="width:250px !important">Location</td>
                             <td style="width:400px !important">Product</td>
-                            <td style="width:100px !important">Extra Product</td>
+                            <!-- <td style="width:100px !important">Extra Product</td> -->
                             <td style="width:200px !important">Size <small>(in inch)</small></td>
                             <td style="width:100px !important">Price</td>
                             <td style="width:100px !important">Qty.</td>
@@ -266,9 +271,6 @@
                                 ${productOptions}
                             </select>
                         </td>
-                        <td>
-                            <textarea style="width:150px" name="extra_product[]" cols="30" rows="3" class="form-control"></textarea>
-                        </td>
                         <td width="350px" class="size-price-qty-container-${rowIndex}">
                             <div class="location-fields">
                                 <span class="d-flex" style="width:200px">
@@ -359,7 +361,9 @@
         row.data('originalData', originalData);
 
         // Set frame image
-        row.find('select[name="frame_image_id[]"]').val(transaction.frame_image_id);
+        row.find('select[name="frame_image_id[]"]')
+        .val(transaction.frame_image_id)
+        .trigger('change');
 
         // Set products (multi-select)
         const productSelect = row.find(`select[name="product_id[${rowIndex}][]"]`);
@@ -406,7 +410,7 @@
 
         sizeContainer.append(`
             <div class="product-fields">
-                <small>${productName}</small>
+                <small>Product ${index+1}</small>
                 <span class="d-flex" style="width:200px">
                     <input type="number" name="size1[${rowIndex}][]" class="form-control" value="${size1Value}">
                     <input type="number" name="size2[${rowIndex}][]" class="form-control" value="${size2Value}">
@@ -416,14 +420,14 @@
 
         priceContainer.append(`
             <div class="product-fields" style="width:100px">
-                <small>${productName}</small>
+                <small>Product ${index+1}</small>
                 <input type="number" name="price[${rowIndex}][]" class="form-control" value="${priceValue}">
             </div>
         `);
 
         qtyContainer.append(`
             <div class="product-fields" style="width:100px">
-                <small>${productName}</small>
+                <small>Product ${index+1}</small>
                 <input type="number" name="qty[${rowIndex}][]" class="form-control" value="${qtyValue}">
             </div>
         `);

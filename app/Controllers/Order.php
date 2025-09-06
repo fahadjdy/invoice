@@ -215,6 +215,7 @@ class Order extends BaseController
         $partyId = $this->request->getPost('party_id');
         $ref_id = $this->request->getPost('ref_id');
         $gst_type = $this->request->getPost('gst_type');
+        $discount = $this->request->getPost('discount');
         $invoiceId = $this->request->getPost('invoice_id') ?? 1;
         $status = $this->request->getPost('status');
 
@@ -225,6 +226,7 @@ class Order extends BaseController
             'name'          => $name,
             'party_id'      => $partyId,
             'ref_id'        => $ref_id,
+            'discount'        => $discount,
             'gst_type'        => $gst_type,
             'invoice_id'    => (!empty($invoiceId)) ? $invoiceId : 1,
             'status'        => $status
@@ -259,7 +261,7 @@ class Order extends BaseController
         $prices = array_values($prices);
         // p($qtys);
         // Loop through each frame image ID
-        foreach ($qtys as $index => $qty) {
+        foreach ($products as $index => $product) {
             
             // $idx = $index + 1;
             // Skip if no location/product data exists for this index
@@ -274,12 +276,18 @@ class Order extends BaseController
             if (isset($sizes1[$index]) && isset($sizes2[$index]) && isset($prices[$index]) && isset($qtys[$index])) {
                 $sqftArray = array_map(function($size1, $size2) {
                     // p($size1);
+                    if($size1 == 0 || $size2 == 0 || $size1 == '' || $size2 == ''){
+                        return 0;
+                    }
                     return ((round($size1,2) * round($size2,2)) / 144); // Convert inches to sqft and multiply by qty
                 }, $sizes1[$index], $sizes2[$index]);
             
                 $sqft = implode(',', $sqftArray); // Store all sqft values as a comma-separated string
             
                 $totalPrice = array_sum(array_map(function($price, $sqft, $qty) {
+                    if($qty == 0 || $qty == '' || $qty == null){
+                        $qty = 1;
+                    }
                     return $price *  $qty; // Perform multiplication if none are zero
                 }, $prices[$index], $sqftArray, $qtys[$index]));
                 
@@ -294,8 +302,7 @@ class Order extends BaseController
                 'orders_id' => $ordersId,
                 'frame_image_id' => $frame_image_ids[$index] ?? null,
                 'location_id' => isset( $locations[$index]) ? implode(',', $locations[$index]) : null,
-                'product_id' =>  implode(',', $products[$index]),
-                'extra_product' => $extraProducts[$index] ?? null,
+                'product_id' =>  implode(',', $product),
                 'size1' => implode(',', $sizes1[$index]),
                 'size2' => implode(',', $sizes2[$index]),
                 'price' => implode(',', $prices[$index]),
@@ -405,7 +412,7 @@ class Order extends BaseController
                             transaction.orders_id,
                             fi.url as frame_image_url,
                             transaction.location_id,
-                            CONCAT(GROUP_CONCAT(DISTINCT p.name ORDER BY p.name SEPARATOR ", "),",",transaction.extra_product) AS product_names,
+                            GROUP_CONCAT(DISTINCT p.name ORDER BY p.name SEPARATOR ", ") AS product_names,
                             GROUP_CONCAT(DISTINCT transaction.size1 ORDER BY transaction.transaction_id) as sizes1,
                             GROUP_CONCAT(DISTINCT transaction.size2 ORDER BY transaction.transaction_id) as sizes2,
                             GROUP_CONCAT(DISTINCT transaction.price ORDER BY transaction.transaction_id) as prices,
@@ -451,9 +458,6 @@ class Order extends BaseController
                 
     }
     public function generatePdf($data) {
-        // echo "<pre>";
-        // print_r($data);
-        // die();
         echo view('Invoice/invoice1',$data);
     }
     

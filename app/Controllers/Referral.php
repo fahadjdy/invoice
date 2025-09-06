@@ -35,8 +35,8 @@ class Referral extends BaseController
                     ELSE r.name
                 END AS referral_name,o.created_at,
                 CASE 
-                    WHEN o.gst_type = 'With GST' THEN tt.total_amount * 1.18
-                    ELSE tt.total_amount
+                    WHEN o.gst_type = 'With GST' THEN tt.total_amount * 1.18 - o.discount
+                    ELSE tt.total_amount - o.discount
                 END AS total_amount
             ", false)
             ->join('party p', 'p.party_id = o.party_id', 'left')

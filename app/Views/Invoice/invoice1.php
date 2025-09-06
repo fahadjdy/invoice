@@ -18,7 +18,7 @@ $datetime = $orders['created_at'] ?? time();
 $date = date('d-m-Y', strtotime($datetime));
 
 $gst_type = $orders['gst_type'] ?? 'Without GST';
-
+$discount = $orders['discount'] ?? 0;
 $skip = 3;
 if($orders['invoice_id'] == 2 || $orders['invoice_id'] == 4){
     $skip = 4;
@@ -191,19 +191,31 @@ if($orders['invoice_id'] == 2 || $orders['invoice_id'] == 4){
                         $locationString = implode(',<br>', $locations);
                         $totalSum += $transaction['total_price'];
                         $totalQty += array_sum($quantities);
-                        $totalSqft += array_sum($quantities);
+
+                        $imagURL = "";
+                        $path   = FCPATH . 'assets/images/FrameImage/' . $transaction['frame_image_url'];
+                        if (!empty($transaction['frame_image_url']) && file_exists($path)) {
+                            $imagURL = base_url('assets/images/FrameImage/' . $transaction['frame_image_url']);
+                        }
+
                 ?>
                 <tr style="border-bottom:1px solid gray !important;">
                     <td class="text-center"><?=$key + 1?></td>
                     <?php if ($is_image) { ?>
-                        <td class="text-center"><img src="<?=base_url('assets/images/FrameImage/'.$transaction['frame_image_url'])?>" width="100px" height="100px"></td>
+                        <td class="text-center">
+                             <?php if($imagURL): ?>
+                                <img src="<?=$imagURL?>" width="100px" height="100px">
+                            <?php endif; ?>
+                        </td>
                     <?php } ?>
                     <?php if ($is_location) { ?> <td><?=$locationString?></td> <?php } ?>
                     <td><?=strtoupper($transaction['product_names'])?></td>
                     <td><?=implode('<br>', array_map(fn($s1, $s2) => ($s1 && $s2) ? $s1 . 'x' . $s2 : '', $sizes1, $sizes2))?></td>
                     <?php
-                        $data = array_map(fn($s1, $s2) => ($s1 && $s2) ? round(calculateSquareFootage($s1, $s2), 2) : '', $sizes1, $sizes2);
-                        $totalSqft += array_sum($data);
+                        if($sizes1 != null && $sizes2 != null){     
+                            $data = array_map(fn($s1, $s2) => ($s1 && $s2) ? round(calculateSquareFootage($s1, $s2), 2) : '', $sizes1, $sizes2);
+                            $totalSqft += array_sum($data);                        
+                        }
                     ?>
                     <td><?=implode('<br>', $data)?></td>
                     <td><?=implode('<br>', $prices)?></td>
@@ -219,33 +231,50 @@ if($orders['invoice_id'] == 2 || $orders['invoice_id'] == 4){
                     <td class="text-right" style="font-weight: bold;"><?=$totalQty?></td>
                     <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum, 2)?></td>
                 </tr>
+                
+                <?php if($discount > 0) : ?>
+                    <tr style="border-top:1px solid gray !important;">
+                        <td colspan = "<?=$skip?>" ></td>
+                        <td class="text-right" ></td>
+                        <td colspan = "0" ></td>
+                        <td class="text-right" style="font-weight: bold;">Discount</td>
+                        <td class="text-right" style="font-weight: bold;"> - <?=number_format($discount,2)?></td>
+                    </tr>
+                <?php endif; ?>
 
                 <!-- if with gst  -->
                  <?php if($gst_type == "With GST") : ?>
-                <tr style="border-top:1px solid gray !important;">
-                    <td colspan = "<?=$skip?>" ></td>
-                    <td class="text-right" ></td>
-                    <td colspan = "0" ></td>
-                    <td class="text-right" style="font-weight: bold;">CGST (9%)</td>
-                    <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum*9/100,2)?></td>
-                </tr>
-                <tr style="border-top:1px solid gray !important;">
-                    <td colspan = "<?=$skip?>" ></td>
-                    <td class="text-right" ></td>
-                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
-                    <td colspan = "0" ></td>
-                    <td class="text-right" style="font-weight: bold;">SGST (9%)</td>
-                    <td class="text-right" style="font-weight: bold;"><?=number_format($totalSum*9/100,2)?></td>
-                </tr>
-                <tr style="border-top:1px solid gray !important;">
-                    <td colspan = "<?=$skip?>" ></td>
-                    <td class="text-right" ></td>
-                    <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
-                    <td colspan = "0" ></td>
-                    <td class="text-right" style="font-weight: bold;">Total With GST</td>
-                    <td class="text-right" style="font-weight: bold;"><?=number_format(($totalSum*18/100)+$totalSum,2)?></td>
-                </tr>
+                    <tr style="border-top:1px solid gray !important;">
+                        <td colspan = "<?=$skip?>" ></td>
+                        <td class="text-right" ></td>
+                        <td colspan = "0" ></td>
+                        <td class="text-right" style="font-weight: bold;">CGST (9%)</td>
+                        <td class="text-right" style="font-weight: bold;"> + <?=number_format($totalSum*9/100,2)?></td>
+                    </tr>
+                    <tr style="border-top:1px solid gray !important;">
+                        <td colspan = "<?=$skip?>" ></td>
+                        <td class="text-right" ></td>
+                        <!--<td colspan="<?=$deafaultColSpan + $colSpan?>" style="text-align: right; font-weight: bold; border-top: 1px solid gray;">Grand Total</td>-->
+                        <td colspan = "0" ></td>
+                        <td class="text-right" style="font-weight: bold;">SGST (9%)</td>
+                        <td class="text-right" style="font-weight: bold;"> + <?=number_format($totalSum*9/100,2)?></td>
+                    </tr>
                 <?php endif; ?>
+                
+                <?php 
+                $final_count = ($gst_type == "With GST") ?  number_format((($totalSum*18/100)+$totalSum) - $discount,2) :  number_format($totalSum - $discount,2) ;
+
+                if($gst_type == "With GST" || $discount > 0){
+                 
+                ?>
+                <tr style="border-top:1px solid gray !important;">
+                    <td colspan = "<?=$skip?>" ></td>
+                    <td class="text-right" ></td>
+                    <td colspan = "0" ></td>
+                    <td class="text-right" style="font-weight: bold;">Total</td>
+                    <td class="text-right" style="font-weight: bold;"><?=$final_count?></td>
+                </tr>
+                <?php } ?>
 
             </tbody>
         </table>

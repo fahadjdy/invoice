@@ -14,7 +14,7 @@ class OrdersModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'orders_id', 'name', 'gst_type',  'party_id', 'ref_id', 'invoice_id', 'created_at', 'updated_at'
+        'orders_id', 'name', 'gst_type',  'party_id', 'ref_id', 'invoice_id', 'discount', 'created_at', 'updated_at'
     ];
 
     protected bool $allowEmptyInserts = false;
