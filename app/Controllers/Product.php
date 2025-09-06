@@ -160,8 +160,9 @@ class Product extends BaseController
                 $action =  '<a href="' . base_url('addOrUpdateFrameImage/' . $value['frame_image_id']) . '"><button   class="btn btn-light btn-sm waves-effect " ><i
             class="mdi mdi-square-edit-outline me-1"></i> Edit</button></a>';
 
-                $action .= '<button type="button" id="' . $value['frame_image_id'] . '" class="btn btn-light btn-sm waves-effect delete mx-2"> <i
-                class="mdi mdi-trash-can me-1"></i> Delete</button>';
+            // commented due to avoid delete option for frame image
+                // $action .= '<button type="button" id="' . $value['frame_image_id'] . '" class="btn btn-light btn-sm waves-effect delete mx-2"> <i
+                // class="mdi mdi-trash-can me-1"></i> Delete</button>';
 
                 if (empty($action)) {
                     $action = '--';
