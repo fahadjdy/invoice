@@ -74,8 +74,27 @@ $(document).ready(function () {
                     return data.length > 0 ? data[0].referral_name : 'Referral List';
                 },
                 customize: function (doc) {
+                    // Adjust widths
                     doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
                     doc.defaultStyle.fontSize = 10;
+                    doc.styles.tableHeader.alignment = 'center';
+
+                    // 🔹 Calculate cleaned total
+                    var api = table.rows({ search: 'applied' }).data();
+                    var total = 0;
+                    for (var i = 0; i < api.length; i++) {
+                        let amountStr = api[i].total_amount || "0";
+                        // Remove currency symbols, commas, spaces
+                        let clean = amountStr.replace(/[₹, ]/g, '');
+                        total += parseFloat(clean) || 0;
+                    }
+
+                    // 🔹 Add total row at the bottom
+                    doc.content[1].table.body.push([
+                        { text: 'Grand Total', colSpan: 3, alignment: 'right', bold: true }, {}, {},
+                        { text: '₹ '+ total.toLocaleString('en-IN'), alignment: 'center', bold: true }
+                    ]);
                 }
             },
             {
