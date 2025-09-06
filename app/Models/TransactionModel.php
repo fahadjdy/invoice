@@ -50,19 +50,39 @@ class TransactionModel extends Model
     //     return $this->select('SUM(total_price)')->get()->getRowArray();
     // }
     
-    public function sumTotalPrice($column, $value, $from, $to) {
-        $data = $this->select("SUM( CASE 
-                    WHEN o.gst_type = 'With GST' THEN total_price * 1.18 - o.discount
-                    ELSE total_price - o.discount
-                END) as total_price")->join('orders o','o.orders_id = transaction.orders_id');
-        if( $column !== NULL)
-        {
-            $data->where('o.'.$column, $value);
+  public function sumTotalPrice($column, $value, $from, $to) {
+        $builder = $this->builder(); // transaction table का builder
+
+        $builder->select("
+            SUM(
+                CASE 
+                    WHEN o.gst_type = 'With GST' 
+                        THEN COALESCE(transaction.total_price,0) * 1.18 - COALESCE(o.discount,0)
+                    ELSE COALESCE(transaction.total_price,0) - COALESCE(o.discount,0)
+                END
+            ) as total_price
+        ")
+        ->join('orders o','o.orders_id = transaction.orders_id');
+
+        // ✅ ref_id filter
+        if (!empty($column) && !empty($value)) {
+            if ($column === 'ref_id') {
+                $builder->where('o.ref_id', $value);
+            } else {
+                $builder->where('o.' . $column, $value);
+            }
         }
-        // echo "<pre>"; print_r($from); echo "</pre>"; die();
-        $data->where('transaction.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
-        $data = $data->first();
-        return $data['total_price'];
+
+        // ✅ date range filter
+        if (!empty($from) && !empty($to)) {
+            $builder->where('DATE(transaction.created_at) >=', $from);
+            $builder->where('DATE(transaction.created_at) <=', $to);
+        }
+        // echo $builder->getCompiledSelect(); exit; // Debugging line to see the generated SQL query
+        $data = $builder->get()->getRowArray();
+        return $data['total_price'] ?? 0;
     }
+
+
     
 }

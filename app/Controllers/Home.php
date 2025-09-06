@@ -39,6 +39,7 @@ class Home extends BaseController
         ->findAll();
         $data['ref_list'] = array_column($ref_list, 'party_name', 'party_id');
         
+
         $from = date("Y-m-d H:i:s", 0);
         $to = date("Y-m-d H:i:s");
         $TransactionModel = new TransactionModel();
@@ -53,15 +54,15 @@ class Home extends BaseController
     public function partyFilter($party_id = NULL, $from = NULL, $to = NULL)
     {
         // dd($party_id);
-        // p($this->request->getPost());
-        $column = ($party_id != NULL && $party_id != 0) ? 'party_id' :  NULL;
+        // p($from);
+        $column = ($party_id != NULL && $party_id != 0) ? 'ref_id' :  NULL;
         $value = ($party_id != NULL && $party_id != 0) ? $party_id :  NULL;
-        $from = empty($from) ? date('Y-m-d H:i:s', 0) : date('Y-m-d H:i:s', strtotime($from));
+        $from = empty($from) ? date('Y-m-d', 0) : date('Y-m-d', strtotime($from));
         // echo "<pre>"; print_r($from); echo "</pre>"; die();
-        $to = empty($to) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($to));
+        $to = empty($to) ? date('Y-m-d') : date('Y-m-d', strtotime($to));
         $TransactionModel = new TransactionModel();
         $party_transactions = $TransactionModel->sumTotalPrice($column, $value, $from, $to);
-        // dd($party_transactions , $TransactionModel->db->getLastQuery());
+        // dd( $TransactionModel->db->getLastQuery());
         echo json_encode(inrFormat($party_transactions)); // json_encode($party_transactions);
         exit;
     }
