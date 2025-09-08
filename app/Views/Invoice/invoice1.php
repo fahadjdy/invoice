@@ -145,7 +145,7 @@ if($orders['invoice_id'] == 2 || $orders['invoice_id'] == 4){
                     <td rowspan="1" colspan="3" style="text-transform: uppercase;"><?=$orders['paty_name']?></td>
                     <td class="inv-dtl-th">Date</td>
                     <td class="colon-td">:</td>
-                    <td><?=date('y/m/d',strtotime($datetime))?></td>
+                    <td><?=date('d-M-Y',strtotime($datetime))?></td>
                 </tr>
                 <tr>
                     <td class="inv-dtl-th">Address</td>
