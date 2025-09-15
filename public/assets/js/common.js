@@ -238,9 +238,6 @@ function fetchOrderDetails(orderId) {
                                         ${populateOptions(productOptions, transaction.product_id)}
                                     </select>
                                 </td>
-                                <td>
-                                    <textarea name="extra_product[]" cols="30" rows="3" class="form-control">${transaction.extra_product}</textarea>
-                                </td>
                                 <td >
                                     <span class="d-flex" style="width:200px">
                                         <input type="number" style="width:auto" name="size1[]" style="width: auto; min-width: 70px;" class="form-control" value="${transaction.size1}">

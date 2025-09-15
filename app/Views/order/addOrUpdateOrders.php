@@ -262,12 +262,12 @@
                             </select>
                         </td>
                         <td width="350px">
-                            <select multiple="multiple" name="location_id[${rowIndex}][]" class="form-control location-select select2-location" >
+                            <select multiple="multiple" name="location_id[${rowIndex}][]" onchange="updateSizePriceQty(this, ${rowIndex})" class="form-control location-select select2-location" >
                                 ${locationOptions}
                             </select>
                         </td>
                         <td width="400px">
-                            <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product" style="width:200px" onchange="updateSizePriceQty(this, ${rowIndex})">
+                            <select multiple="multiple" name="product_id[${rowIndex}][]" class="form-control select2-product" style="width:200px" >
                                 ${productOptions}
                             </select>
                         </td>
@@ -347,7 +347,7 @@
 
      async function populateRowData(rowIndex, transaction) {
         const row = $(`tr[data-row-index="${rowIndex}"]`);
-
+// console.log(transaction);
         // Store original data
         const originalData = {
             locationIds: transaction.location_id ? transaction.location_id.split(',') : [],
@@ -371,17 +371,16 @@
 
           const locationSelect = row.find(`select[name="location_id[${rowIndex}][]"]`);
         locationSelect.val(originalData.locationIds).trigger('change');
-
         // Set extra product
-        row.find('textarea[name="extra_product[]"]').val(transaction.extra_product || '');
+        // row.find('textarea[name="extra_product[]"]').val(transaction.extra_product || '');
 
         // Force update of size/price/qty fields
         await new Promise(resolve => setTimeout(resolve, 100));
-        updateSizePriceQty(productSelect[0], rowIndex);
+        updateSizePriceQty(locationSelect[0], rowIndex);
     }
 
-   function updateSizePriceQty(selectElement, rowIndex) {
-    const selectedProducts = $(selectElement).val() || [];
+  function updateSizePriceQty(selectElement, rowIndex) {
+    const selectedLocations = $(selectElement).val() || [];
     const row = $(selectElement).closest('tr');
     const originalData = row.data('originalData') || {};
 
@@ -389,28 +388,21 @@
     const priceContainer = $(`.price-container-${rowIndex}`);
     const qtyContainer = $(`.qty-container-${rowIndex}`);
 
-    // Show containers in case they were hidden
-    sizeContainer.show();
-    priceContainer.show();
-    qtyContainer.show();
-
-    // Clear previous fields
+    // Reset
     sizeContainer.empty();
     priceContainer.empty();
     qtyContainer.empty();
 
-    selectedProducts.forEach((productId, index) => {
-        const productName = $(`option[value="${productId}"]`, selectElement).text();
-
-        // Use originalData if exists, else empty for Add Mode
+    selectedLocations.forEach((locationId, index) => {
+        // Load old values for edit mode
         const size1Value = (originalData.sizes1 && originalData.sizes1[index]) || '';
         const size2Value = (originalData.sizes2 && originalData.sizes2[index]) || '';
         const priceValue = (originalData.prices && originalData.prices[index]) || '';
-        const qtyValue = (originalData.quantities && originalData.quantities[index]) || '';
+        const qtyValue   = (originalData.quantities && originalData.quantities[index]) || 1;
 
         sizeContainer.append(`
-            <div class="product-fields">
-                <small>Product ${index+1}</small>
+            <div class="location-fields">
+                <small>Location ${index+1}</small>
                 <span class="d-flex" style="width:200px">
                     <input type="number" name="size1[${rowIndex}][]" class="form-control" value="${size1Value}">
                     <input type="number" name="size2[${rowIndex}][]" class="form-control" value="${size2Value}">
@@ -419,15 +411,15 @@
         `);
 
         priceContainer.append(`
-            <div class="product-fields" style="width:100px">
-                <small>Product ${index+1}</small>
+            <div class="location-fields" style="width:100px">
+                <small>Location ${index+1}</small>
                 <input type="number" name="price[${rowIndex}][]" class="form-control" value="${priceValue}">
             </div>
         `);
 
         qtyContainer.append(`
-            <div class="product-fields" style="width:100px">
-                <small>Product ${index+1}</small>
+            <div class="location-fields" style="width:100px">
+                <small>Location ${index+1}</small>
                 <input type="number" name="qty[${rowIndex}][]" class="form-control" value="${qtyValue}">
             </div>
         `);
@@ -436,7 +428,7 @@
 
 
     // Optional: call this whenever the product multi-select changes
-    $(document).on('change', 'select[name^="product_id"]', function() {
+    $(document).on('change', 'select[name^="location_id"]', function() {
         const rowIndex = $(this).closest('tr').data('row-index');
         updateSizePriceQty(this, rowIndex);
     });
@@ -495,45 +487,45 @@
 
 
         // Trigger price calculation when size1 or size2 changes
-        $(document).on('input', 'input[name^="size1"], input[name^="size2"]', function() {
-    const $sizeInput = $(this);
-    const $row = $sizeInput.closest('tr');
-    const rowIndex = $row.data('row-index');
+//         $(document).on('input', 'input[name^="size1"], input[name^="size2"]', function() {
+//     const $sizeInput = $(this);
+//     const $row = $sizeInput.closest('tr');
+//     const rowIndex = $row.data('row-index');
 
-    // Get the container of this product’s size fields
-    const $sizeFieldContainer = $sizeInput.closest('.product-fields');
-    const productIndex = $sizeFieldContainer.index(); // position in the row
+//     // Get the container of this product’s size fields
+//     const $sizeFieldContainer = $sizeInput.closest('.product-fields');
+//     const productIndex = $sizeFieldContainer.index(); // position in the row
 
-    // Get the corresponding price input
-    const $priceContainer = $(`.price-container-${rowIndex}`);
-    const $priceInput = $priceContainer.find('input[name^="price"]').eq(productIndex);
+//     // Get the corresponding price input
+//     const $priceContainer = $(`.price-container-${rowIndex}`);
+//     const $priceInput = $priceContainer.find('input[name^="price"]').eq(productIndex);
 
-    const size1 = parseFloat($sizeFieldContainer.find('input[name^="size1"]').val()) || 0;
-    const size2 = parseFloat($sizeFieldContainer.find('input[name^="size2"]').val()) || 0;
+//     const size1 = parseFloat($sizeFieldContainer.find('input[name^="size1"]').val()) || 0;
+//     const size2 = parseFloat($sizeFieldContainer.find('input[name^="size2"]').val()) || 0;
 
-    if (size1 > 0 && size2 > 0) {
-        // Calculate area in sqft
-        const sqft = (size1 * size2) / 144;
+//     if (size1 > 0 && size2 > 0) {
+//         // Calculate area in sqft
+//         const sqft = (size1 * size2) / 144;
 
-        // Get the multi-select for this row
-        const $productSelect = $(`select[name="product_id[${rowIndex}][]"]`);
-        const selectedProductIds = $productSelect.val() || [];
+//         // Get the multi-select for this row
+//         const $productSelect = $(`select[name="product_id[${rowIndex}][]"]`);
+//         const selectedProductIds = $productSelect.val() || [];
 
-        // Get product ID corresponding to this product field
-        const productId = selectedProductIds[productIndex];
+//         // Get product ID corresponding to this product field
+//         const productId = selectedProductIds[productIndex];
 
-        // Fetch price per sqft from the option’s data-price
-        const pricePerSqft = parseFloat($productSelect.find(`option[value="${productId}"]`).data('price')) || 0;
+//         // Fetch price per sqft from the option’s data-price
+//         const pricePerSqft = parseFloat($productSelect.find(`option[value="${productId}"]`).data('price')) || 0;
 
-        // Calculate total price
-        const totalPrice = (sqft * pricePerSqft).toFixed(2);
+//         // Calculate total price
+//         const totalPrice = (sqft * pricePerSqft).toFixed(2);
 
-        // Update only this product’s price input
-        $priceInput.val(totalPrice);
-    } else {
-        $priceInput.val('');
-    }
-});
+//         // Update only this product’s price input
+//         $priceInput.val(totalPrice);
+//     } else {
+//         $priceInput.val('');
+//     }
+// });
 
 
 

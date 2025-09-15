@@ -254,14 +254,12 @@ class Order extends BaseController
         $transactionDataArray = [];
         $qtys = array_values($qtys);
         $locations = array_values($locations);
-        // p($locations);die();
         $products = array_values($products);
         $sizes1 = array_values($sizes1);
         $sizes2 = array_values($sizes2);
         $prices = array_values($prices);
-        // p($qtys);
         // Loop through each frame image ID
-        foreach ($products as $index => $product) {
+        foreach ($locations as $index => $location) {
             
             // $idx = $index + 1;
             // Skip if no location/product data exists for this index
@@ -271,27 +269,35 @@ class Order extends BaseController
             // echo "Counter ",$index;
 
             // Calculate total price for this transaction including sqft
-            $totalPrice = 0;
+           $totalPrice = 0;
             $sqft = 0;
+
             if (isset($sizes1[$index]) && isset($sizes2[$index]) && isset($prices[$index]) && isset($qtys[$index])) {
+        // p($sizes1);
+
                 $sqftArray = array_map(function($size1, $size2) {
-                    // p($size1);
-                    if($size1 == 0 || $size2 == 0 || $size1 == '' || $size2 == ''){
+                    if ($size1 == 0 || $size2 == 0 || $size1 === '' || $size2 === '') {
                         return 0;
                     }
-                    return ((round($size1,2) * round($size2,2)) / 144); // Convert inches to sqft and multiply by qty
+                    // return exact sqft value (float, full precision)
+                    return ($size1 * $size2) / 144;
                 }, $sizes1[$index], $sizes2[$index]);
-            
-                $sqft = implode(',', $sqftArray); // Store all sqft values as a comma-separated string
-            
+
+                // store exact sqft values (comma-separated)
+                $sqft = implode(',', $sqftArray);
+
+                // calculate total price (keeps float precision)
                 $totalPrice = array_sum(array_map(function($price, $sqft, $qty) {
-                    if($qty == 0 || $qty == '' || $qty == null){
+                    if ($qty == 0 || $qty === '' || $qty === null) {
                         $qty = 1;
                     }
-                    return $price *  $qty; // Perform multiplication if none are zero
+                    return (float)$price * (float)$sqft * (float)$qty;
                 }, $prices[$index], $sqftArray, $qtys[$index]));
-                
+
+                // force float (not rounded)
+                $totalPrice = (float)$totalPrice;
             }
+
             
             
             // p($frame_image_ids);
@@ -301,8 +307,9 @@ class Order extends BaseController
                 'transaction_id' => $transactionIds[$index] ?? null,
                 'orders_id' => $ordersId,
                 'frame_image_id' => $frame_image_ids[$index] ?? null,
-                'location_id' => isset( $locations[$index]) ? implode(',', $locations[$index]) : null,
-                'product_id' =>  implode(',', $product),
+                'location_id' => isset( $location) ? implode(',', $location) : null,
+                // 'location_id' => isset( $locations[$index]) ? implode(',', $locations[$index]) : null,
+                'product_id' =>  isset( $products[$index]) ? implode(',', $products[$index]) : null,
                 'size1' => implode(',', $sizes1[$index]),
                 'size2' => implode(',', $sizes2[$index]),
                 'price' => implode(',', $prices[$index]),
@@ -314,7 +321,7 @@ class Order extends BaseController
             $transactionDataArray[] = $transactionData;
         }
         // echo"<pre>";
-        // var_dump($transactionDataArray);die();
+        // print_r($transactionDataArray);die();
         if (!empty($transactionIds)) {
             foreach ($transactionDataArray as $key => $val) {
                 if (isset($val)) {
