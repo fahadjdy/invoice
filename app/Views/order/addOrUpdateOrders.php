@@ -376,7 +376,16 @@
 
         // Force update of size/price/qty fields
         await new Promise(resolve => setTimeout(resolve, 100));
-        updateSizePriceQty(locationSelect[0], rowIndex);
+        console.log(locationSelect[0]);
+// if location empty than loop it with product ===================================== 
+    const conditionForPriceLoop = $(locationSelect[0]).closest('tr');
+    const rawOriginalData = conditionForPriceLoop.data('originalData') || {};
+    // console.log();
+    const loop = (rawOriginalData.locationIds.length > 0) ? locationSelect[0] : productSelect[0];
+// ===================
+
+
+        updateSizePriceQty(loop, rowIndex);
     }
 
   function updateSizePriceQty(selectElement, rowIndex) {
@@ -430,7 +439,7 @@
     // Optional: call this whenever the product multi-select changes
     $(document).on('change', 'select[name^="location_id"]', function() {
         const rowIndex = $(this).closest('tr').data('row-index');
-        updateSizePriceQty(this, rowIndex);
+        // updateSizePriceQty(this, rowIndex);
     });
 
     function removeRow(button, transactionId) {
